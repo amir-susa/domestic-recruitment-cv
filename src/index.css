@@ -2,15 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  font-family:
-    Inter,
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+@layer components {
+  .cell {
+    @apply box-border border border-black;
+  }
+}
 
+:root {
+  font-family: Arial, Tahoma, sans-serif;
   color: #0f172a;
   background: #e5e7eb;
   font-synthesis: none;
@@ -48,4 +47,105 @@ button {
 img {
   max-width: 100%;
   display: block;
+}
+
+.font-serif,
+.font-serif * {
+  font-family: Garamond, "Times New Roman", Times, serif;
+}
+
+.font-arabic,
+.font-arabic * {
+  font-family: Arial, "Arial Hebrew", "Arial Narrow", Tahoma, sans-serif;
+}
+
+.toolbar-action {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid #64748b;
+  background: #fff;
+  padding: 4px 10px;
+  color: #000080;
+  font: 700 13px/1.2 Arial, Tahoma, sans-serif;
+  white-space: nowrap;
+}
+
+.toolbar-action:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+
+.cv-document-shell {
+  max-width: 100%;
+}
+
+main[data-preview="true"] [data-cv-page] {
+  pointer-events: none;
+}
+
+main[data-preview="true"] .cv-editor-control {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: 952px 1233px;
+    margin: 0;
+  }
+
+  html,
+  body,
+  #root {
+    width: 952px;
+    min-width: 0;
+    margin: 0;
+    background: #fff;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  main {
+    min-height: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: #fff !important;
+  }
+
+  main > div:not(.pdf-toolbar) {
+    min-width: 0 !important;
+    gap: 0 !important;
+    padding: 0 !important;
+  }
+
+  [data-cv-page] {
+    flex: none !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    break-after: page;
+    page-break-after: always;
+  }
+
+  [data-cv-page]:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  [data-upload-control] {
+    display: none !important;
+  }
+
+  .pdf-toolbar {
+    display: none !important;
+  }
+
+  .app-modal,
+  .cv-editor-control {
+    display: none !important;
+  }
 }

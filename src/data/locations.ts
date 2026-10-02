@@ -1,0 +1,62 @@
+export const countries = [
+  "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda",
+  "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas",
+  "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin",
+  "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei",
+  "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon",
+  "Canada", "Central African Republic", "Chad", "Chile", "China", "Colombia",
+  "Comoros", "Congo", "Costa Rica", "Cote d'Ivoire", "Croatia", "Cuba", "Cyprus",
+  "Czechia", "Democratic People's Republic of Korea", "Democratic Republic of the Congo",
+  "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt",
+  "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Eswatini", "Ethiopia",
+  "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", "Germany", "Ghana",
+  "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti",
+  "Holy See", "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran",
+  "Iraq", "Ireland", "Israel", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan",
+  "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan", "Laos", "Latvia", "Lebanon", "Lesotho",
+  "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Madagascar",
+  "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania",
+  "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro",
+  "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands",
+  "New Zealand", "Nicaragua", "Niger", "Nigeria", "North Macedonia", "Norway", "Oman",
+  "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru",
+  "Philippines", "Poland", "Portugal", "Qatar", "Republic of Korea", "Republic of the Congo",
+  "Romania", "Russian Federation", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia",
+  "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe",
+  "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore",
+  "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Sudan",
+  "Spain", "Sri Lanka", "Sudan", "Suriname", "Sweden", "Switzerland", "Syrian Arab Republic",
+  "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago",
+  "Tunisia", "Turkiye", "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates",
+  "United Kingdom", "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela",
+  "Vietnam", "Yemen", "Zambia", "Zimbabwe",
+] as const;
+
+export const ethiopianBirthPlaces = [
+  "Abiy Addi", "Abomsa", "Adama", "Adami Tulu", "Addis Ababa", "Addis Alem", "Addis Zemen",
+  "Adet", "Adigrat", "Adola", "Adwa", "Agaro", "Alaba Kulito", "Alamata", "Aleta Wendo",
+  "Amba Mariam", "Ambo", "Arba Minch", "Areka", "Asaita", "Asella", "Assosa", "Awash",
+  "Azezo", "Babille", "Badme", "Bahir Dar", "Bako", "Bambasi", "Bati", "Batu", "Bedele",
+  "Bekoji", "Bichena", "Bishoftu", "Boditi", "Bonga", "Bule Hora", "Burayu", "Butajira",
+  "Chencha", "Chiro", "Dabat", "Dangila", "Debre Berhan", "Debre Markos", "Debre Tabor",
+  "Dejen", "Dembi Dolo", "Dessie", "Dilla", "Dire Dawa", "Dodola", "Dolo Odo", "Dukem",
+  "Durame", "Fiche", "Finote Selam", "Gambela", "Goba", "Gode", "Gondar", "Gore", "Harar",
+  "Haramaya", "Hawassa", "Hayq", "Holeta", "Hosaena", "Humera", "Injibara", "Irgalem",
+  "Itang", "Jijiga", "Jimma", "Jinka", "Karat", "Kebri Dehar", "Kemise", "Kobo", "Kombolcha",
+  "Konso", "Korem", "Lalibela", "Logiya", "Masha", "Maychew", "Meki", "Mekelle", "Metahara",
+  "Metema", "Metu", "Mizan Teferi", "Mojo", "Negele Arsi", "Negele Boran", "Nefas Mewcha",
+  "Nejo", "Nekemte", "Robe", "Sabata", "Semera", "Shakiso", "Shambu", "Shashamane",
+  "Shewa Robit", "Shire", "Shone", "Sodo", "Sululta", "Tepi", "Tiya", "Tulu Bolo", "Turmi",
+  "Waliso", "Weldiya", "Wukro", "Yabelo", "Yirga Alem",
+] as const;
+
+export const ethiopianPassportIssuePlaces = [
+  "Addis Ababa", "Adama", "Adigrat", "Axum", "Bahir Dar", "Dire Dawa", "Gambela", "Gondar",
+  "Harar", "Hawassa", "Jimma", "Jijiga", "Mekelle", "Nekemte", "Semera", "Shire", "Sodo",
+] as const;
+
+export const arabLeagueCountries = [
+  "Algeria", "Bahrain", "Comoros", "Djibouti", "Egypt", "Iraq", "Jordan", "Kuwait", "Lebanon",
+  "Libya", "Mauritania", "Morocco", "Oman", "Palestine", "Qatar", "Saudi Arabia", "Somalia",
+  "Sudan", "Syria", "Tunisia", "United Arab Emirates", "Yemen",
+] as const;

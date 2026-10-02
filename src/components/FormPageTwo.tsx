@@ -1,10 +1,12 @@
-import React from "react";
 import { PageFrame } from "./PageFrame";
 import { PhotoSlot } from "./PhotoSlot";
 import { BrandLogo } from "./BrandLogo";
 import { DateSerialRow } from "./DateSerialRow";
+import { useCVForm } from "../context/CVFormContext";
 
 export function FormPageTwo() {
+  const { formData, setPhoto } = useCVForm();
+
   return (
     <PageFrame
       label="Application for Employment, page 2"
@@ -20,11 +22,16 @@ export function FormPageTwo() {
         <div className="ml-[34px]">
           <h1 className="font-serif text-[21px] font-bold text-navy">DAREIN EST</h1>
           <div className="mt-[4px] rounded-[5px] border border-black bg-navy px-3 py-[4px] font-serif text-[11px] font-bold text-white">
-            FOR RECRUITMENT OF DOMESTIC MANPOER
+            FOR RECRUITMENT OF DOMESTIC MANPOWER
           </div>
         </div>
         <div className="ml-[16px] mt-[28px] w-[411px]">
-          <DateSerialRow columns={["58px", "136px", "84px", "133px"]} height="h-[28px]" />
+          <DateSerialRow
+            columns={["58px", "136px", "84px", "133px"]}
+            height="h-[28px]"
+            compact
+            dateValue={formData.date}
+            serialNoValue={formData.serialNo} />
         </div>
       </header>
 
@@ -33,7 +40,12 @@ export function FormPageTwo() {
       </div>
 
       <div className="mt-[20px] flex justify-center">
-        <PhotoSlot title="Passport" size="3.54” x 5.18”" className="h-[398px] w-[582px]" />
+        <PhotoSlot
+          title="Passport"
+          size="3.54” x 5.18”"
+          value={formData.passportPhoto}
+          onChange={(photo) => setPhoto("passportPhoto", photo)}
+          className="h-[398px] w-[582px]" />
       </div>
     </PageFrame>);
 

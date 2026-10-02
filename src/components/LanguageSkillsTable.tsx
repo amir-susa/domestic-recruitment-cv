@@ -1,19 +1,10 @@
-import React, { useState } from "react";
-import { defaultLanguageLevels, languageLevels } from "../data/applicationForm";
+import { languageLevels } from "../data/applicationForm";
+import { useCVForm } from "../context/CVFormContext";
 
 type Language = "english" | "arabic";
 
 export function LanguageSkillsTable() {
-  const [checked, setChecked] = useState<Record<string, boolean>>(() => {
-    const initial: Record<string, boolean> = {};
-    (["english", "arabic"] as Language[]).forEach((lang) => {
-      const level = defaultLanguageLevels[lang];
-      if (level) initial[`${lang}-${level}`] = true;
-    });
-    return initial;
-  });
-
-  const toggle = (key: string) => setChecked((p) => ({ ...p, [key]: !p[key] }));
+  const { formData, updateLanguage } = useCVForm();
 
   const headCls = "cell bg-label px-2 font-serif text-[15px] font-bold text-navy";
 
@@ -32,22 +23,25 @@ export function LanguageSkillsTable() {
         <tr key={level.id} className="h-[28px]">
             <th scope="row" className={`${headCls} text-left`}>{level.en}</th>
             {(["english", "arabic"] as Language[]).map((lang) => {
-            const key = `${lang}-${level.id}`;
-            return (
-              <td key={lang} className="cell p-0 text-center">
-                  <button
-                  type="button"
-                  role="checkbox"
-                  aria-checked={!!checked[key]}
-                  aria-label={`${lang} ${level.en.toLowerCase()}`}
-                  onClick={() => toggle(key)}
-                  className="inline-flex h-[22px] w-[24px] items-center justify-center border border-black align-middle text-[15px] leading-none text-black hover:bg-label/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-navy">
-                  
-                    {checked[key] ? "✓" : ""}
-                  </button>
-                </td>);
-
-          })}
+              const selected = formData.languages[lang] === level.id;
+              return (
+                <td key={`${lang}-${level.id}`} className="cell p-0 text-center">
+                  <label className="flex h-[22px] w-[24px] cursor-pointer items-center justify-center align-middle">
+                    <input
+                      type="radio"
+                      name={lang}
+                      checked={selected}
+                      onChange={() => updateLanguage(lang, level.id)}
+                      className="sr-only"
+                      aria-label={`${lang} ${level.en.toLowerCase()}`}
+                    />
+                    <span className={`flex h-[18px] w-[18px] items-center justify-center border border-black text-[12px] leading-none text-black ${selected ? "bg-label" : "bg-white"}`}>
+                      {selected ? "✓" : ""}
+                    </span>
+                  </label>
+                </td>
+              );
+            })}
             <td dir="rtl" className={`${headCls} font-arabic text-[14px]`}>{level.ar}</td>
           </tr>
         )}

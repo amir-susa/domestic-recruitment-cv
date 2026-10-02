@@ -1,16 +1,27 @@
-import React from "react";
 import { CellInput } from "./CellInput";
 
-type Row = {en: string;ar: string;value?: string;};
+type Row = {
+  en: string;
+  ar: string;
+  value?: string;
+  readOnly?: boolean;
+  type?: "text" | "date" | "number";
+  min?: number;
+  max?: number;
+  step?: number;
+  options?: readonly string[];
+  suggestions?: readonly string[];
+};
 
 type BilingualTableProps = {
   rows: Row[];
   columns: [string, string, string];
   rowHeight: string;
   valueSize?: "lg" | "sm";
+  onValueChange: (label: string, value: string) => void;
 };
 
-export function BilingualTable({ rows, columns, rowHeight, valueSize = "lg" }: BilingualTableProps) {
+export function BilingualTable({ rows, columns, rowHeight, valueSize = "lg", onValueChange }: BilingualTableProps) {
   return (
     <table className="w-full table-fixed border-collapse">
       <colgroup>
@@ -25,7 +36,19 @@ export function BilingualTable({ rows, columns, rowHeight, valueSize = "lg" }: B
               {row.en}
             </th>
             <td className="cell p-0">
-              <CellInput label={row.en} defaultValue={row.value} size={valueSize} />
+              <CellInput
+                label={row.en}
+                value={row.value}
+                onChange={(event) => onValueChange(row.en, event.currentTarget.value)}
+                onOptionChange={(value) => onValueChange(row.en, value)}
+                readOnly={row.readOnly}
+                type={row.type}
+                min={row.min}
+                max={row.max}
+                step={row.step}
+                options={row.options}
+                suggestions={row.suggestions}
+                size={valueSize} />
             </td>
             <td dir="rtl" className="cell bg-label align-top px-2 py-0.5 font-arabic text-[14px] font-bold text-navy">
               {row.ar}

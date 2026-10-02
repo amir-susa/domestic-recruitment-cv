@@ -1,10 +1,8 @@
-import React, { useState } from "react";
 import { skills } from "../data/applicationForm";
+import { useCVForm } from "../context/CVFormContext";
 
 export function SkillsGrid() {
-  const [checked, setChecked] = useState<Record<string, boolean>>(
-    Object.fromEntries(skills.map((s) => [s.id, s.checked]))
-  );
+  const { formData, toggleSkill } = useCVForm();
 
   return (
     <div className="grid grid-cols-3 border border-black">
@@ -16,18 +14,18 @@ export function SkillsGrid() {
         }>
         
           <div className="leading-[1.1]">
-            <div dir="rtl" className="text-left font-arabic text-[13px] font-bold text-navy">{skill.ar}</div>
+            <div dir="rtl" className="text-right font-arabic text-[14px] font-bold text-navy">{skill.ar}</div>
             <div className="font-serif text-[16px] font-bold text-navy">{skill.en}</div>
           </div>
           <button
           type="button"
           role="checkbox"
-          aria-checked={checked[skill.id]}
+          aria-checked={formData.skills[skill.id] ?? skill.checked}
           aria-label={skill.en}
-          onClick={() => setChecked((p) => ({ ...p, [skill.id]: !p[skill.id] }))}
+          onClick={() => toggleSkill(skill.id)}
           className="flex h-[40px] w-[44px] items-center justify-center border border-black text-[20px] text-black hover:bg-label/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-navy">
           
-            {checked[skill.id] ? "✓" : ""}
+            {formData.skills[skill.id] ?? skill.checked ? "✓" : ""}
           </button>
         </div>
       )}

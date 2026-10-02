@@ -1,4 +1,5 @@
-import React from "react";
+
+import logo from "../assets/logo.png";
 
 type BrandLogoProps = {size?: "lg" | "sm";};
 
@@ -7,17 +8,12 @@ export function BrandLogo({ size = "lg" }: BrandLogoProps) {
   return (
     <div
       aria-hidden="true"
-      className={`flex shrink-0 items-center justify-center rounded-full border-brand bg-white ${
-      isLg ? "h-[96px] w-[96px] border-[5px]" : "h-[66px] w-[66px] border-[4px]"}`
+      className={`flex shrink-0 items-center justify-center rounded-full border-[3px] border-navy bg-white p-1 shadow-sm ${
+      isLg ? "h-[96px] w-[96px]" : "h-[66px] w-[66px]"}`
       }>
-      
-      <span
-        className={`-ml-1 font-serif font-bold italic leading-none text-brand ${
-        isLg ? "text-[78px]" : "text-[52px]"}`
-        }>
-        
-        D
-      </span>
+      <div className="flex h-full w-full items-center justify-center rounded-full border border-navy bg-white">
+        <img src={logo} alt="" className="h-[82%] w-[82%] object-contain" />
+      </div>
     </div>);
 
 }

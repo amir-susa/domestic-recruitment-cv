@@ -1,4 +1,3 @@
-import React from "react";
 
 type SectionHeadingProps = {en: string;ar: string;className?: string;};
 
