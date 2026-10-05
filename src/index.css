@@ -9,7 +9,9 @@
 }
 
 :root {
-  font-family: Arial, Tahoma, sans-serif;
+  --cv-font-english: "Garamond", "Times New Roman", Times, serif;
+  --cv-font-arabic: Arial, "Arial Hebrew", Tahoma, sans-serif;
+  font-family: var(--cv-font-english);
   color: #0f172a;
   background: #e5e7eb;
   font-synthesis: none;
@@ -51,12 +53,12 @@ img {
 
 .font-serif,
 .font-serif * {
-  font-family: Garamond, "Times New Roman", Times, serif;
+  font-family: var(--cv-font-english);
 }
 
 .font-arabic,
 .font-arabic * {
-  font-family: Arial, "Arial Hebrew", "Arial Narrow", Tahoma, sans-serif;
+  font-family: var(--cv-font-arabic);
 }
 
 .toolbar-action {
@@ -80,6 +82,17 @@ img {
 
 .cv-document-shell {
   max-width: 100%;
+}
+
+.pdf-value {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  min-width: 0;
+  margin: 0;
+  overflow: visible;
+  white-space: nowrap;
+  font-family: var(--cv-font-english);
 }
 
 main[data-preview="true"] [data-cv-page] {

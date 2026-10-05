@@ -19,7 +19,7 @@ export function DateSerialRow({
   onDateChange,
   onSerialNoChange,
 }: DateSerialRowProps) {
-  const label = "cell bg-label px-2 text-left font-serif text-[16px] font-normal text-navy";
+  const label = "cell bg-label px-2 text-left font-serif text-cv-section font-normal text-navy";
   return (
     <table className="w-full table-fixed border-collapse">
       <colgroup>

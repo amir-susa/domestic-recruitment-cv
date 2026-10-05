@@ -6,16 +6,16 @@ type Language = "english" | "arabic";
 export function LanguageSkillsTable() {
   const { formData, updateLanguage } = useCVForm();
 
-  const headCls = "cell bg-label px-2 font-serif text-[15px] font-bold text-navy";
+  const headCls = "cell bg-label px-2 font-serif text-cv-body font-bold text-navy";
 
   return (
     <table className="w-full table-fixed border-collapse">
       <thead>
         <tr className="h-[25px]">
           <th className={`${headCls} text-left`}>ENGLISH</th>
-          <th dir="rtl" className={`${headCls} font-arabic text-[14px]`}>إنجليزي</th>
+          <th dir="rtl" className={`${headCls} font-arabic text-cv-arabic-small`}>إنجليزي</th>
           <th className={`${headCls} text-left`}>ARABIC</th>
-          <th dir="rtl" className={`${headCls} font-arabic text-[14px]`}>عربي</th>
+          <th dir="rtl" className={`${headCls} font-arabic text-cv-arabic-small`}>عربي</th>
         </tr>
       </thead>
       <tbody>
@@ -35,14 +35,14 @@ export function LanguageSkillsTable() {
                       className="sr-only"
                       aria-label={`${lang} ${level.en.toLowerCase()}`}
                     />
-                    <span className={`flex h-[18px] w-[18px] items-center justify-center border border-black text-[12px] leading-none text-black ${selected ? "bg-label" : "bg-white"}`}>
+                    <span className={`flex h-[18px] w-[18px] items-center justify-center border border-black text-cv-micro leading-none text-black ${selected ? "bg-label" : "bg-white"}`}>
                       {selected ? "✓" : ""}
                     </span>
                   </label>
                 </td>
               );
             })}
-            <td dir="rtl" className={`${headCls} font-arabic text-[14px]`}>{level.ar}</td>
+            <td dir="rtl" className={`${headCls} font-arabic text-cv-arabic-small`}>{level.ar}</td>
           </tr>
         )}
       </tbody>

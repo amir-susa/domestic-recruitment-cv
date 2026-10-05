@@ -14,8 +14,8 @@ export function SkillsGrid() {
         }>
         
           <div className="leading-[1.1]">
-            <div dir="rtl" className="text-right font-arabic text-[14px] font-bold text-navy">{skill.ar}</div>
-            <div className="font-serif text-[16px] font-bold text-navy">{skill.en}</div>
+            <div dir="rtl" className="text-right font-arabic text-cv-arabic-small font-bold text-navy">{skill.ar}</div>
+            <div className="font-serif text-cv-section font-bold text-navy">{skill.en}</div>
           </div>
           <button
           type="button"

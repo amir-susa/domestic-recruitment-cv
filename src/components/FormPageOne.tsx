@@ -98,17 +98,17 @@ export function FormPageOne() {
       {/* Header */}
       <header className="flex h-[117px] items-start justify-between px-[8px] pt-[14px]">
         <div className="w-[400px]">
-          <h1 className="pl-[6px] font-serif text-[32px] font-bold leading-none tracking-wide text-navy">DAREIN EST</h1>
-          <div className="mt-[12px] rounded-[5px] border border-black bg-navy px-3 py-[9px] font-serif text-[13px] font-bold text-white">
+          <h1 className="pl-[6px] font-serif text-cv-display font-bold leading-none tracking-wide text-navy">DAREIN EST</h1>
+          <div className="mt-[12px] rounded-[5px] border border-black bg-navy px-3 py-[9px] font-serif text-cv-small font-bold text-white">
             FOR RECRUITMENT OF DOMESTIC MANPOWER
           </div>
         </div>
-        <div className="flex items-center justify-center rounded-full border-[3px] border-navy bg-white p-1 shadow-sm">
+        <div className="flex h-[110px] w-[110px] shrink-0 items-center justify-center">
           <BrandLogo />
         </div>
         <div className="w-[316px] text-right">
-          <div dir="rtl" className="pr-6 font-arabic text-[29px] font-bold leading-none text-navy">دارين التأسيس</div>
-          <div dir="rtl" className="mt-[14px] rounded-[5px] border border-black bg-navy px-3 py-[8px] font-arabic text-[15px] font-bold text-white">
+          <div dir="rtl" className="pr-6 font-arabic text-cv-arabic-display font-bold text-navy">دارين التأسيس</div>
+          <div dir="rtl" className="mt-[14px] rounded-[5px] border border-black bg-navy px-3 py-[8px] font-arabic text-cv-arabic font-bold text-white">
             لتوظيف القوى العاملة المحلية
           </div>
         </div>
@@ -118,21 +118,21 @@ export function FormPageOne() {
       <div className="flex">
         <div className="w-[650px]">
           <div className="bg-navy py-[4px] text-center text-white">
-            <p dir="rtl" className="font-arabic text-[14px] font-bold">
+            <p dir="rtl" className="font-arabic text-cv-arabic-small font-bold">
               الفروانية بلوك ٤ حبيب مناور شارع - عربيد معرض- مكتب الميزانين رقم -١ الكويت
             </p>
-            <p className="font-serif text-[15.5px] font-bold">
+            <p className="font-serif text-cv-body font-bold">
               Farwaniya Block 4, Habib Menawer Steet, Arbeed gallery, Mezanin office No. 1,
             </p>
           </div>
           <div className="flex items-center justify-center gap-4 pt-[4px]">
-            <span className="font-serif text-[19px] font-bold text-navy">Afnan 69984733</span>
-            <span className="flex h-[38px] w-[38px] items-center justify-center rounded-full border-[2px] border-navy bg-white shadow-sm">
-              <img src={mobileIcon} alt="" className="h-6 w-6 object-contain" />
+            <span className="font-serif text-cv-contact font-bold text-navy">Afnan 69984733</span>
+            <span className="flex h-[38px] w-[38px] shrink-0 items-center justify-center">
+              <img src={mobileIcon} alt="" className="h-[30px] w-[30px] object-contain" />
             </span>
-            <span dir="rtl" className="font-arabic text-[18px] font-bold text-navy">أفنان ٦٩٩٨٤٧٣٣</span>
+            <span dir="rtl" className="font-arabic text-cv-arabic font-bold text-navy">أفنان ٦٩٩٨٤٧٣٣</span>
           </div>
-          <h2 className="mt-[2px] text-center font-serif text-[27px] font-bold text-navy">Application for Employment</h2>
+          <h2 className="mt-[2px] text-center font-serif text-cv-title font-bold text-navy">Application for Employment</h2>
           <div className="mt-[8px] pl-[4px] pr-[4px]">
             <DateSerialRow
               columns={["58px", "252px", "88px", "238px"]}
@@ -149,9 +149,9 @@ export function FormPageOne() {
               </colgroup>
               <tbody>
                 <tr className="h-[36px]">
-                  <th scope="row" className="cell bg-label px-2 text-left align-top font-serif text-[16px] font-bold text-navy">FULL NAME</th>
+                  <th scope="row" className="cell bg-label px-2 text-left align-top font-serif text-cv-section font-bold text-navy">FULL NAME</th>
                   <td className="cell p-0"><CellInput label="Full name" value={formData.fullName} onChange={(event) => updateField("fullName", event.currentTarget.value)} /></td>
-                  <td dir="rtl" className="cell bg-label px-2 align-top font-arabic text-[15px] font-bold leading-[1.3] text-navy">الاسم الكامل</td>
+                  <td dir="rtl" className="cell bg-label px-2 align-top font-arabic text-cv-arabic font-bold leading-[1.3] text-navy">الاسم الكامل</td>
                 </tr>
               </tbody>
             </table>
@@ -205,7 +205,7 @@ export function FormPageOne() {
                   const period = parseExperiencePeriod(entry.period);
                   return (
                     <tr key={index} className="h-[31px]">
-                      <th scope="row" className="cell bg-label px-2 text-left align-middle font-serif text-[15px] font-bold text-navy">
+                      <th scope="row" className="cell bg-label px-2 text-left align-middle font-serif text-cv-body font-bold text-navy">
                         {`COUNTRY ${index + 1}`}
                       </th>
                       <td className="cell p-0">
@@ -216,7 +216,7 @@ export function FormPageOne() {
                               value={entry.country}
                               options={arabLeagueCountries}
                               onOptionChange={(value) => updateExperience(index, "country", value)}
-                              size="xs" />
+                              size="sm" />
                           </div>
                           <select
                             aria-label={`Experience ${index + 1} years`}
@@ -224,7 +224,7 @@ export function FormPageOne() {
                             data-pdf-value={`${period.years}y`}
                             value={period.years}
                             onChange={(event) => updateExperience(index, "period", `${event.currentTarget.value} Years ${period.months} Months`)}
-                            className="h-full w-[63px] shrink-0 bg-transparent px-0.5 font-serif text-[11px] font-bold text-navy focus:outline-none focus:bg-label/20">
+                            className="h-full w-[63px] shrink-0 bg-transparent px-0.5 font-serif text-cv-small font-bold leading-none text-navy focus:outline-none focus:bg-label/20">
                             {experienceYears.map((year) => <option key={year} value={year}>{year}y</option>)}
                           </select>
                           <select
@@ -233,12 +233,12 @@ export function FormPageOne() {
                             data-pdf-value={`${period.months}m`}
                             value={period.months}
                             onChange={(event) => updateExperience(index, "period", `${period.years} Years ${event.currentTarget.value} Months`)}
-                            className="h-full w-[60px] shrink-0 bg-transparent px-0.5 font-serif text-[11px] font-bold text-navy focus:outline-none focus:bg-label/20">
+                            className="h-full w-[60px] shrink-0 bg-transparent px-0.5 font-serif text-cv-small font-bold leading-none text-navy focus:outline-none focus:bg-label/20">
                             {experienceMonths.map((month) => <option key={month} value={month}>{month}m</option>)}
                           </select>
                         </div>
                       </td>
-                      <td dir="rtl" className="cell bg-label px-2 align-middle font-arabic text-[14px] font-bold text-navy">
+                      <td dir="rtl" className="cell bg-label px-2 align-middle font-arabic text-cv-arabic-small font-bold text-navy">
                         <span className="flex items-center justify-between gap-1">
                           <span>{experienceFields[0].ar}</span>
                           {formData.experiences.length > 1 ? (
@@ -267,12 +267,13 @@ export function FormPageOne() {
         <div className="flex flex-1 flex-col pr-[12px]">
           <div className="max-w-full pl-[10px]">
             <SectionHeading en="PASSPORT DETAILS" ar="تفاصيل جواز السفر" className="pt-2" />
-            <div className="min-w-0 max-w-full overflow-hidden">
+            <div className="min-w-0 max-w-full overflow-visible">
               <BilingualTable
                 rows={passportRows}
-                columns={["132px", "151px", "123px"]}
+                columns={["130px", "144px", "116px"]}
                 rowHeight="h-[29px]"
                 valueSize="sm"
+                compactArabic
                 onValueChange={(label, value) => updateField(passportFieldByLabel[label as keyof typeof passportFieldByLabel], value)} />
             </div>
           </div>

@@ -11,7 +11,7 @@ export function FormPageTwo() {
     <PageFrame
       label="Application for Employment, page 2"
       footer={
-      <footer className="flex h-[34px] items-center justify-between border border-black bg-navy px-3 font-sans text-[15px] text-white">
+      <footer className="flex h-[34px] items-center justify-between border border-black bg-navy px-3 font-sans text-cv-body text-white">
           <span>DAREIN EST - Application for Employment</span>
           <span className="pr-4">Page 2</span>
         </footer>
@@ -20,8 +20,8 @@ export function FormPageTwo() {
       <header className="flex h-[88px] items-center border-b-[5px] border-navy px-[24px]">
         <BrandLogo size="sm" />
         <div className="ml-[34px]">
-          <h1 className="font-serif text-[21px] font-bold text-navy">DAREIN EST</h1>
-          <div className="mt-[4px] rounded-[5px] border border-black bg-navy px-3 py-[4px] font-serif text-[11px] font-bold text-white">
+          <h1 className="font-serif text-cv-heading font-bold text-navy">DAREIN EST</h1>
+          <div className="mt-[4px] rounded-[5px] border border-black bg-navy px-3 py-[4px] font-serif text-cv-caption font-bold text-white">
             FOR RECRUITMENT OF DOMESTIC MANPOWER
           </div>
         </div>
@@ -35,7 +35,7 @@ export function FormPageTwo() {
         </div>
       </header>
 
-      <div className="mx-[54px] mt-[18px] flex h-[40px] items-center justify-center border border-black bg-navy font-sans text-[15px] text-white">
+      <div className="mx-[54px] mt-[18px] flex h-[40px] items-center justify-center border border-black bg-navy font-sans text-cv-body text-white">
         PASSPORT COPY ATTACHMENT
       </div>
 

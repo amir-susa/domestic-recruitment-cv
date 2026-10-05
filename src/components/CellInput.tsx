@@ -36,7 +36,7 @@ export function CellInput({
   const isControlled = value !== undefined && (onChange !== undefined || onOptionChange !== undefined);
   const currentValue = isControlled ? value ?? "" : localValue;
   const className = `w-full h-full align-middle bg-transparent px-2 font-serif font-bold leading-[1.1] text-navy focus:outline-none focus:bg-label/20 ${
-    size === "lg" ? "text-[18px]" : size === "xs" ? "text-[12px]" : "text-[15px]"} ${
+    size === "lg" ? "text-cv-value" : size === "xs" ? "text-cv-micro" : "text-cv-body"} ${
     align === "center" ? "text-center" : "text-left"}`;
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {

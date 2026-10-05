@@ -18,10 +18,15 @@ type BilingualTableProps = {
   columns: [string, string, string];
   rowHeight: string;
   valueSize?: "lg" | "sm";
+  compactArabic?: boolean;
   onValueChange: (label: string, value: string) => void;
 };
 
-export function BilingualTable({ rows, columns, rowHeight, valueSize = "lg", onValueChange }: BilingualTableProps) {
+export function BilingualTable({ rows, columns, rowHeight, valueSize = "lg", compactArabic = false, onValueChange }: BilingualTableProps) {
+  const arabicCellSpacing = compactArabic
+    ? "px-1 py-0.5 text-cv-small leading-[1.15]"
+    : "px-2 py-0.5 text-cv-arabic-small";
+
   return (
     <table className="w-full table-fixed border-collapse">
       <colgroup>
@@ -32,7 +37,7 @@ export function BilingualTable({ rows, columns, rowHeight, valueSize = "lg", onV
       <tbody>
         {rows.map((row) =>
         <tr key={row.en} className={rowHeight}>
-            <th scope="row" className="cell bg-label align-top px-2 py-0.5 text-left font-serif text-[15px] font-bold leading-[1.15] text-navy">
+            <th scope="row" className="cell bg-label align-top px-2 py-0.5 text-left font-serif text-cv-body font-bold leading-[1.15] text-navy">
               {row.en}
             </th>
             <td className="cell p-0">
@@ -50,7 +55,7 @@ export function BilingualTable({ rows, columns, rowHeight, valueSize = "lg", onV
                 suggestions={row.suggestions}
                 size={valueSize} />
             </td>
-            <td dir="rtl" className="cell bg-label align-top px-2 py-0.5 font-arabic text-[14px] font-bold text-navy">
+            <td dir="rtl" className={`cell bg-label align-top ${arabicCellSpacing} font-arabic font-bold text-navy`}>
               {row.ar}
             </td>
           </tr>
