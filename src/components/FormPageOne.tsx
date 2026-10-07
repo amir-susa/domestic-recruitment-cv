@@ -128,7 +128,7 @@ export function FormPageOne() {
           <div className="flex items-center justify-center gap-4 pt-[4px]">
             <span className="font-serif text-cv-contact font-bold text-navy">Afnan 69984733</span>
             <span className="flex h-[38px] w-[38px] shrink-0 items-center justify-center">
-              <img src={mobileIcon} alt="" className="h-[30px] w-[30px] object-contain" />
+              <img src={mobileIcon} alt="" className="h-[20px] w-[20px] object-contain" />
             </span>
             <span dir="rtl" className="font-arabic text-cv-arabic font-bold text-navy">أفنان ٦٩٩٨٤٧٣٣</span>
           </div>
