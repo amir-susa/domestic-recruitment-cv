@@ -1,1 +1,164 @@
-import React, { createContext, useContext, useState } from "react"; export interface CVFormData { fullName: string; mothersName?: string; phoneNo?: string; livingTown?: string; nationality: string; religion: string; dateOfBirth: string; age: string; placeOfBirth: string; maritalStatus: string; numberOfChildren: string; weight: string; height: string; educationalQualification: string; passportNumber: string; passportDateOfIssue: string; passportPlaceOfIssue: string; passportDateOfExpiry: string; englishSkill: "POOR" | "FAIR" | "FLUENT" | "GOOD"; arabicSkill: "POOR" | "FAIR" | "FLUENT" | "GOOD"; previousExperience: { country: string; period: string }[]; skills: { babySitting?: boolean; washing?: boolean; cleaning?: boolean; cooking?: boolean; sewing?: boolean; driving?: boolean; houseWork?: boolean; }; headshotPhoto?: string; fullBodyPhoto?: string; passportScan?: string; medicalScan?: string; selectedPartner?: "darein" | "al_andalus"; } const initialFormData: CVFormData = { fullName: "", mothersName: "", phoneNo: "", livingTown: "", nationality: "Ethiopia", religion: "Muslim", dateOfBirth: "", age: "", placeOfBirth: "", maritalStatus: "Single", numberOfChildren: "0", weight: "", height: "", educationalQualification: "Primary Education", passportNumber: "", passportDateOfIssue: "", passportPlaceOfIssue: "Addis Ababa", passportDateOfExpiry: "", englishSkill: "FAIR", arabicSkill: "FAIR", previousExperience: [{ country: "", period: "" }], skills: { babySitting: true, washing: true, cleaning: true, cooking: true, sewing: false, driving: false, houseWork: true }, }; interface CVFormContextType { formData: CVFormData; updateFormData: (updates: Partial<CVFormData>) => void; resetForm: () => void; calculatePassportExpiry: (passportNum: string, issueDate: string, ageStr: string) => string; } const CVFormContext = createContext<CVFormContextType | undefined>(undefined); export const CVFormProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => { const [formData, setFormData] = useState<CVFormData>(initialFormData); const calculatePassportExpiry = (passportNum: string, issueDateStr: string, ageStr: string): string => { if (!issueDateStr) return ""; const issueDate = new Date(issueDateStr); if (isNaN(issueDate.getTime())) return ""; const numUpper = (passportNum || "").trim().toUpperCase(); const age = parseInt(ageStr || "0", 10); let yearsToAdd = 5; if (numUpper.startsWith("EQ") || numUpper.startsWith("EP")) { yearsToAdd = 5; } else if (numUpper.startsWith("E")) { yearsToAdd = age >= 25 ? 10 : 5; } else { yearsToAdd = 5; } const expiryDate = new Date(issueDate); expiryDate.setFullYear(expiryDate.getFullYear() + yearsToAdd); expiryDate.setDate(expiryDate.getDate() - 1); return expiryDate.toISOString().split("T")[0]; }; const updateFormData = (updates: Partial<CVFormData>) => { setFormData((prev) => { const next = { ...prev, ...updates }; if (updates.passportNumber !== undefined || updates.passportDateOfIssue !== undefined || updates.age !== undefined || updates.dateOfBirth !== undefined) { const passportNum = updates.passportNumber ?? next.passportNumber; const issueDate = updates.passportDateOfIssue ?? next.passportDateOfIssue; const ageVal = updates.age ?? next.age; if (issueDate) { next.passportDateOfExpiry = calculatePassportExpiry(passportNum, issueDate, ageVal); } } return next; }); }; const resetForm = () => setFormData(initialFormData); return ( <CVFormContext.Provider value={{ formData, updateFormData, resetForm, calculatePassportExpiry }}> {children} </CVFormContext.Provider> ); }; export const useCVForm = () => { const context = useContext(CVFormContext); if (!context) throw new Error("useCVForm must be used within a CVFormProvider"); return context; };
+﻿import React, { createContext, useContext, useState } from "react";
+
+export interface ExperienceEntry {
+  country: string;
+  years: string;
+  months: string;
+}
+
+export interface CVFormData {
+  fullName: string;
+  mothersName?: string;
+  phoneNo?: string;
+  livingTown?: string;
+  nationality: string;
+  religion: string;
+  dateOfBirth: string;
+  age: string;
+  placeOfBirth: string;
+  maritalStatus: string;
+  numberOfChildren: string;
+  weight: string;
+  height: string;
+  educationalQualification: string;
+  passportNumber: string;
+  passportDateOfIssue: string;
+  passportPlaceOfIssue: string;
+  passportDateOfExpiry: string;
+  englishSkill: "POOR" | "FAIR" | "FLUENT" | "GOOD";
+  arabicSkill: "POOR" | "FAIR" | "FLUENT" | "GOOD";
+  previousExperiences: ExperienceEntry[];
+  skills: {
+    babySitting?: boolean;
+    washing?: boolean;
+    cleaning?: boolean;
+    cooking?: boolean;
+    sewing?: boolean;
+    driving?: boolean;
+    houseWork?: boolean;
+  };
+  headshotPhoto?: string;
+  fullBodyPhoto?: string;
+  passportScan?: string;
+  medicalScan?: string;
+  selectedPartner?: "darein" | "al_andalus" | "general";
+}
+
+export const ARAB_COUNTRIES = [
+  "Saudi Arabia",
+  "Kuwait",
+  "UAE (United Arab Emirates)",
+  "Qatar",
+  "Oman",
+  "Bahrain",
+  "Lebanon",
+  "Jordan",
+  "Iraq",
+];
+
+const initialFormData: CVFormData = {
+  fullName: "",
+  mothersName: "",
+  phoneNo: "",
+  livingTown: "",
+  nationality: "Ethiopia",
+  religion: "Muslim",
+  dateOfBirth: "",
+  age: "",
+  placeOfBirth: "",
+  maritalStatus: "Single",
+  numberOfChildren: "0",
+  weight: "",
+  height: "",
+  educationalQualification: "Primary Education",
+  passportNumber: "",
+  passportDateOfIssue: "",
+  passportPlaceOfIssue: "Addis Ababa",
+  passportDateOfExpiry: "",
+  englishSkill: "FAIR",
+  arabicSkill: "FAIR",
+  previousExperiences: [{ country: "Saudi Arabia", years: "2", months: "0" }],
+  skills: {
+    babySitting: true,
+    washing: true,
+    cleaning: true,
+    cooking: true,
+    sewing: false,
+    driving: false,
+    houseWork: true,
+  },
+};
+
+interface CVFormContextType {
+  formData: CVFormData;
+  updateFormData: (updates: Partial<CVFormData>) => void;
+  resetForm: () => void;
+  calculatePassportExpiry: (passportNum: string, issueDate: string, ageStr: string) => string;
+}
+
+const CVFormContext = createContext<CVFormContextType | undefined>(undefined);
+
+export const CVFormProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [formData, setFormData] = useState<CVFormData>(initialFormData);
+
+  const calculatePassportExpiry = (passportNum: string, issueDateStr: string, ageStr: string): string => {
+    if (!issueDateStr) return "";
+    const issueDate = new Date(issueDateStr);
+    if (isNaN(issueDate.getTime())) return "";
+    const numUpper = (passportNum || "").trim().toUpperCase();
+    const age = parseInt(ageStr || "0", 10);
+    let yearsToAdd = 5;
+    if (numUpper.startsWith("EQ") || numUpper.startsWith("EP")) {
+      yearsToAdd = 5;
+    } else if (numUpper.startsWith("E")) {
+      yearsToAdd = age >= 25 ? 10 : 5;
+    } else {
+      yearsToAdd = 5;
+    }
+    const expiryDate = new Date(issueDate);
+    expiryDate.setFullYear(expiryDate.getFullYear() + yearsToAdd);
+    expiryDate.setDate(expiryDate.getDate() - 1);
+    return expiryDate.toISOString().split("T")[0];
+  };
+
+  const updateFormData = (updates: Partial<CVFormData>) => {
+    setFormData((prev) => {
+      const next = { ...prev, ...updates };
+
+      // Rule: Place of Birth defaults to Living Town if updated
+      if (updates.livingTown !== undefined && !prev.placeOfBirth) {
+        next.placeOfBirth = updates.livingTown;
+      }
+
+      // Rule: Passport Expiry Date Auto-Calculation
+      if (
+        updates.passportNumber !== undefined ||
+        updates.passportDateOfIssue !== undefined ||
+        updates.age !== undefined ||
+        updates.dateOfBirth !== undefined
+      ) {
+        const passportNum = updates.passportNumber ?? next.passportNumber;
+        const issueDate = updates.passportDateOfIssue ?? next.passportDateOfIssue;
+        const ageVal = updates.age ?? next.age;
+        if (issueDate) {
+          next.passportDateOfExpiry = calculatePassportExpiry(passportNum, issueDate, ageVal);
+        }
+      }
+      return next;
+    });
+  };
+
+  const resetForm = () => setFormData(initialFormData);
+
+  return (
+    <CVFormContext.Provider value={{ formData, updateFormData, resetForm, calculatePassportExpiry }}>
+      {children}
+    </CVFormContext.Provider>
+  );
+};
+
+export const useCVForm = () => {
+  const context = useContext(CVFormContext);
+  if (!context) throw new Error("useCVForm must be used within a CVFormProvider");
+  return context;
+};

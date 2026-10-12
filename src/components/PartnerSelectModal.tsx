@@ -1,1 +1,104 @@
-import React, { useState } from "react"; import { PARTNERS, type PartnerConfig } from "../config/partners"; import { Check, Download, X } from "lucide-react"; interface PartnerSelectModalProps { isOpen: boolean; onClose: () => void; onGenerate: (selectedPartnerIds: string[]) => void; } export const PartnerSelectModal: React.FC<PartnerSelectModalProps> = ({ isOpen, onClose, onGenerate, }) => { const [selectedIds, setSelectedIds] = useState<string[]>(["darein", "al_andalus"]); if (!isOpen) return null; const togglePartner = (id: string) => { setSelectedIds((prev) => prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id] ); }; return ( <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4"> <div className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-100"> <div className="p-5 border-b flex justify-between items-center bg-slate-50"> <h3 className="font-bold text-slate-800 text-lg">Select Foreign Partners</h3> <button onClick={onClose} className="p-1 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-200"> <X className="w-5 h-5" /> </button> </div> <div className="p-6 space-y-4"> <p className="text-sm text-slate-600"> Select the recruitment agencies you want to generate polished CV PDFs for: </p> <div className="space-y-3"> {Object.values(PARTNERS).map((partner: PartnerConfig) => { const isChecked = selectedIds.includes(partner.id); return ( <div key={partner.id} onClick={() => togglePartner(partner.id)} className={`p-4 rounded-lg border-2 cursor-pointer flex items-center justify-between transition-all ${ isChecked ? "border-emerald-500 bg-emerald-50/40" : "border-slate-200 hover:border-slate-300" }`} > <div className="space-y-0.5"> <h4 className="font-bold text-slate-800 text-sm">{partner.name}</h4> <p className="text-xs text-slate-500">{partner.arabicName}</p> </div> <div className={`w-6 h-6 rounded-md flex items-center justify-center border ${ isChecked ? "bg-emerald-600 border-emerald-600 text-white" : "border-slate-300 bg-white" }`} > {isChecked && <Check className="w-4 h-4 stroke-[3]" />} </div> </div> ); })} </div> </div> <div className="p-5 border-t bg-slate-50 flex gap-3"> <button onClick={onClose} className="flex-1 py-2.5 px-4 rounded-lg font-semibold text-slate-600 hover:bg-slate-200 text-sm" > Cancel </button> <button disabled={selectedIds.length === 0} onClick={() => onGenerate(selectedIds)} className="flex-1 py-2.5 px-4 rounded-lg font-semibold bg-emerald-600 hover:bg-emerald-700 text-white text-sm flex items-center justify-center gap-2 shadow-md disabled:opacity-50" > <Download className="w-4 h-4" /> Download ({selectedIds.length}) </button> </div> </div> </div> ); };
+﻿import React, { useState } from "react";
+import { PARTNERS, type PartnerConfig } from "../config/partners";
+import { Check, Download, X } from "lucide-react";
+
+interface PartnerSelectModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onGenerate: (selectedPartnerIds: string[]) => void;
+}
+
+export const PartnerSelectModal: React.FC<PartnerSelectModalProps> = ({
+  isOpen,
+  onClose,
+  onGenerate,
+}) => {
+  const [selectedIds, setSelectedIds] = useState<string[]>([
+    "al_andalus",
+    "darein",
+    "general",
+  ]);
+
+  if (!isOpen) return null;
+
+  const togglePartner = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((p) => p !== id) : [...prev, id]
+    );
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div className="bg-white rounded-xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-100">
+        <div className="p-5 border-b flex justify-between items-center bg-slate-50">
+          <h3 className="font-extrabold text-slate-800 text-lg">
+            Select Export Templates
+          </h3>
+          <button
+            onClick={onClose}
+            className="p-1 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-200"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-4">
+          <p className="text-xs font-semibold text-slate-600">
+            Select the templates you want to generate polished CV PDFs for:
+          </p>
+
+          <div className="space-y-3">
+            {Object.values(PARTNERS).map((partner: PartnerConfig) => {
+              const isChecked = selectedIds.includes(partner.id);
+              return (
+                <div
+                  key={partner.id}
+                  onClick={() => togglePartner(partner.id)}
+                  className={`p-3.5 rounded-lg border-2 cursor-pointer flex items-center justify-between transition-all ${
+                    isChecked
+                      ? "border-emerald-500 bg-emerald-50/40"
+                      : "border-slate-200 hover:border-slate-300"
+                  }`}
+                >
+                  <div className="space-y-0.5">
+                    <h4 className="font-bold text-slate-800 text-sm">
+                      {partner.name}
+                    </h4>
+                    <p className="text-xs font-medium text-slate-500">
+                      {partner.arabicName}
+                    </p>
+                  </div>
+                  <div
+                    className={`w-6 h-6 rounded-md flex items-center justify-center border ${
+                      isChecked
+                        ? "bg-emerald-600 border-emerald-600 text-white"
+                        : "border-slate-300 bg-white"
+                    }`}
+                  >
+                    {isChecked && <Check className="w-4 h-4 stroke-[3]" />}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="p-5 border-t bg-slate-50 flex gap-3">
+          <button
+            onClick={onClose}
+            className="flex-1 py-2.5 px-4 rounded-lg font-bold text-slate-600 hover:bg-slate-200 text-xs"
+          >
+            Cancel
+          </button>
+          <button
+            disabled={selectedIds.length === 0}
+            onClick={() => onGenerate(selectedIds)}
+            className="flex-1 py-2.5 px-4 rounded-lg font-extrabold bg-emerald-600 hover:bg-emerald-700 text-white text-xs flex items-center justify-center gap-2 shadow-md disabled:opacity-50"
+          >
+            <Download className="w-4 h-4" /> Download ({selectedIds.length})
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};

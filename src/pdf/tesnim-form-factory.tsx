@@ -5,183 +5,196 @@ import { PARTNERS } from "../config/partners";
 
 const styles = StyleSheet.create({
   page: {
-    padding: 20,
-    fontFamily: "Helvetica",
-    fontSize: 9,
+    padding: 18,
+    fontFamily: "Helvetica-Bold",
+    fontSize: 8,
     backgroundColor: "#ffffff",
   },
-  header: {
+  stampHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 10,
-    borderBottomWidth: 2,
-    borderBottomColor: "#0A1931",
-    paddingBottom: 5,
+    fontSize: 7,
+    color: "#555555",
+    marginBottom: 6,
   },
-  title: {
+  // Al-Andalus Header
+  alAndalusHeader: {
+    backgroundColor: "#0A1931",
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 4,
+  },
+  alAndalusHeaderTitle: {
+    color: "#88C057",
     fontSize: 14,
     fontWeight: "bold",
+  },
+  alAndalusHeaderSub: {
+    color: "#ffffff",
+    fontSize: 9,
+  },
+  pillHeader: {
+    backgroundColor: "#88C057",
     color: "#0A1931",
-  },
-  section: {
-    marginBottom: 10,
-  },
-  sectionTitle: {
-    fontSize: 11,
+    paddingVertical: 3,
+    paddingHorizontal: 8,
+    borderRadius: 10,
     fontWeight: "bold",
-    backgroundColor: "#f0f4f8",
-    padding: 4,
-    marginBottom: 5,
-    color: "#0A1931",
+    fontSize: 8.5,
+    marginBottom: 4,
+    width: "70%",
   },
-  row: {
+  twoColumnContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 12,
+  },
+  leftColumn: {
+    width: "56%",
+  },
+  rightColumn: {
+    width: "42%",
+    alignItems: "center",
+  },
+  tableRow: {
     flexDirection: "row",
     borderBottomWidth: 1,
-    borderBottomColor: "#eeeeee",
+    borderBottomColor: "#dddddd",
     paddingVertical: 3,
   },
-  cellLabel: {
-    width: "35%",
+  labelCell: {
+    width: "40%",
     fontWeight: "bold",
-    color: "#333333",
+    color: "#222222",
   },
-  cellValue: {
-    width: "65%",
-    color: "#111111",
+  valueCell: {
+    width: "60%",
+    color: "#000000",
+  },
+  photoBoxPill: {
+    width: 210,
+    height: 420,
+    borderWidth: 3,
+    borderColor: "#88C057",
+    borderRadius: 24,
+    overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#f7faf5",
+  },
+  footerBox: {
+    backgroundColor: "#0A1931",
+    padding: 6,
+    textAlign: "center",
+    color: "#ffffff",
+    fontSize: 7.5,
+    marginTop: 10,
+  },
+  // Attachment Slots
+  attachmentBox: {
+    width: "100%",
+    height: 340,
+    borderWidth: 1,
+    borderColor: "#0A1931",
+    borderRadius: 4,
+    padding: 6,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10,
   },
 });
 
 export function buildCVFormView(formData: CVFormData) {
   const partnerKey = formData.selectedPartner || "al_andalus";
   const partner = PARTNERS[partnerKey] || PARTNERS.al_andalus;
-  const skillsObj = formData.skills || {};
-  const skillList = Object.keys(skillsObj).filter((k) => skillsObj[k as keyof typeof skillsObj]);
+
+  const now = new Date();
+  const timeStamp = now.toISOString().replace("T", " ").substring(0, 16);
+  const serialNo = "CV-" + now.getFullYear() + String(now.getMonth() + 1).padStart(2, "0") + String(now.getDate()).padStart(2, "0") + "-001";
+
+  const experiences = formData.previousExperiences || [];
+  const expText = experiences.length > 0
+    ? experiences.map((e) => e.country + " (" + e.years + "Y " + (e.months !== "0" ? e.months + "M" : "") + ")").join(" • ")
+    : "None";
 
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.title}>{partner.name}</Text>
-            <Text>{partner.arabicName}</Text>
-          </View>
-          {formData.headshotPhoto ? (
-            <Image src={formData.headshotPhoto} style={{ width: 60, height: 75 }} />
-          ) : null}
+      {/* PAGE 1: DETAILS & PROFILE PHOTO */}
+      <Page size="A4" style={styles.page} wrap={false}>
+        <View style={styles.stampHeader}>
+          <Text>Date: {timeStamp}</Text>
+          <Text>Serial No: {serialNo}</Text>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Details of Application</Text>
-          <View style={styles.row}>
-            <Text style={styles.cellLabel}>Full Name:</Text>
-            <Text style={styles.cellValue}>{formData.fullName || "N/A"}</Text>
+        <View style={styles.alAndalusHeader}>
+          <Text style={styles.alAndalusHeaderTitle}>{partner.name}</Text>
+          <Text style={styles.alAndalusHeaderSub}>{partner.arabicName}</Text>
+        </View>
+
+        <View style={styles.twoColumnContainer}>
+          <View style={styles.leftColumn}>
+            <Text style={styles.pillHeader}>Details of Application</Text>
+            <View style={styles.tableRow}><Text style={styles.labelCell}>Full Name:</Text><Text style={styles.valueCell}>{formData.fullName || "N/A"}</Text></View>
+            <View style={styles.tableRow}><Text style={styles.labelCell}>Nationality:</Text><Text style={styles.valueCell}>{formData.nationality || "Ethiopia"}</Text></View>
+            <View style={styles.tableRow}><Text style={styles.labelCell}>Religion:</Text><Text style={styles.valueCell}>{formData.religion || "N/A"}</Text></View>
+            <View style={styles.tableRow}><Text style={styles.labelCell}>Place of Birth:</Text><Text style={styles.valueCell}>{formData.placeOfBirth || formData.livingTown || "N/A"}</Text></View>
+            <View style={styles.tableRow}><Text style={styles.labelCell}>Date of Birth / Age:</Text><Text style={styles.valueCell}>{(formData.dateOfBirth || "N/A") + " (" + (formData.age || "N/A") + " Yrs)"}</Text></View>
+            <View style={styles.tableRow}><Text style={styles.labelCell}>Living Town:</Text><Text style={styles.valueCell}>{formData.livingTown || "N/A"}</Text></View>
+            <View style={styles.tableRow}><Text style={styles.labelCell}>Marital Status / Children:</Text><Text style={styles.valueCell}>{(formData.maritalStatus || "Single") + " (" + (formData.numberOfChildren || "0") + ")"}</Text></View>
+            <View style={styles.tableRow}><Text style={styles.labelCell}>Mother Name:</Text><Text style={styles.valueCell}>{formData.mothersName || "N/A"}</Text></View>
+            <View style={styles.tableRow}><Text style={styles.labelCell}>Height / Weight:</Text><Text style={styles.valueCell}>{(formData.height ? formData.height + " cm" : "N/A") + " / " + (formData.weight ? formData.weight + " kg" : "N/A")}</Text></View>
+            <View style={styles.tableRow}><Text style={styles.labelCell}>Education:</Text><Text style={styles.valueCell}>{formData.educationalQualification || "Primary Education"}</Text></View>
+
+            <Text style={[styles.pillHeader, { marginTop: 8 }]}>Previous Experience</Text>
+            <View style={styles.tableRow}><Text style={styles.labelCell}>Arab Countries:</Text><Text style={styles.valueCell}>{expText}</Text></View>
+
+            <Text style={[styles.pillHeader, { marginTop: 8 }]}>Passport Details</Text>
+            <View style={styles.tableRow}><Text style={styles.labelCell}>Number:</Text><Text style={styles.valueCell}>{formData.passportNumber || "N/A"}</Text></View>
+            <View style={styles.tableRow}><Text style={styles.labelCell}>Issue Date / Place:</Text><Text style={styles.valueCell}>{(formData.passportDateOfIssue || "N/A") + " / " + (formData.passportPlaceOfIssue || "Addis Ababa")}</Text></View>
+            <View style={styles.tableRow}><Text style={styles.labelCell}>Expiry Date:</Text><Text style={styles.valueCell}>{formData.passportDateOfExpiry || "N/A"}</Text></View>
           </View>
-          <View style={styles.row}>
-            <Text style={styles.cellLabel}>Mother Name:</Text>
-            <Text style={styles.cellValue}>{formData.mothersName || "N/A"}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.cellLabel}>Phone Number:</Text>
-            <Text style={styles.cellValue}>{formData.phoneNo || "N/A"}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.cellLabel}>Living Town:</Text>
-            <Text style={styles.cellValue}>{formData.livingTown || "N/A"}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.cellLabel}>Nationality / Religion:</Text>
-            <Text style={styles.cellValue}>
-              {(formData.nationality || "Ethiopia") + " / " + (formData.religion || "N/A")}
-            </Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.cellLabel}>Date of Birth / Age:</Text>
-            <Text style={styles.cellValue}>
-              {(formData.dateOfBirth || "N/A") + " (" + (formData.age || "N/A") + " Yrs)"}
-            </Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.cellLabel}>Place of Birth:</Text>
-            <Text style={styles.cellValue}>{formData.placeOfBirth || "N/A"}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.cellLabel}>Marital Status / Children:</Text>
-            <Text style={styles.cellValue}>
-              {(formData.maritalStatus || "Single") + " (" + (formData.numberOfChildren || "0") + " Children)"}
-            </Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.cellLabel}>Weight / Height:</Text>
-            <Text style={styles.cellValue}>
-              {(formData.weight ? formData.weight + " kg" : "N/A") + " / " + (formData.height ? formData.height + " cm" : "N/A")}
-            </Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.cellLabel}>Education:</Text>
-            <Text style={styles.cellValue}>{formData.educationalQualification || "Primary Education"}</Text>
+
+          <View style={styles.rightColumn}>
+            <View style={styles.photoBoxPill}>
+              {formData.fullBodyPhoto ? (
+                <Image src={formData.fullBodyPhoto} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              ) : formData.headshotPhoto ? (
+                <Image src={formData.headshotPhoto} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              ) : (
+                <Text style={{ color: "#888888" }}>Full Candidate Photo</Text>
+              )}
+            </View>
           </View>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Passport Details</Text>
-          <View style={styles.row}>
-            <Text style={styles.cellLabel}>Passport Number:</Text>
-            <Text style={styles.cellValue}>{formData.passportNumber || "N/A"}</Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.cellLabel}>Issue Date / Place:</Text>
-            <Text style={styles.cellValue}>
-              {(formData.passportDateOfIssue || "N/A") + " (" + (formData.passportPlaceOfIssue || "Addis Ababa") + ")"}
-            </Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.cellLabel}>Expiry Date:</Text>
-            <Text style={styles.cellValue}>{formData.passportDateOfExpiry || "N/A"}</Text>
-          </View>
+        <View style={styles.footerBox}>
+          <Text>TESNIM FOREIGN EMPLOYMENT AGENCY | Tel: +251 90 828 2828 | tesnimagency2828@gmail.com</Text>
+        </View>
+      </Page>
+
+      {/* PAGE 2: PASSPORT AND MEDICAL ATTACHMENTS (STRICT 2 PAGES) */}
+      <Page size="A4" style={styles.page} wrap={false}>
+        <View style={styles.stampHeader}>
+          <Text>Date: {timeStamp}</Text>
+          <Text>Serial No: {serialNo}</Text>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Skills and Languages</Text>
-          <View style={styles.row}>
-            <Text style={styles.cellLabel}>English / Arabic:</Text>
-            <Text style={styles.cellValue}>
-              {(formData.englishSkill || "FAIR") + " / " + (formData.arabicSkill || "FAIR")}
-            </Text>
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.cellLabel}>Job Skills:</Text>
-            <Text style={styles.cellValue}>
-              {skillList.length > 0 ? skillList.join(", ") : "House Work"}
-            </Text>
-          </View>
-        </View>
+        <Text style={styles.pillHeader}>Attachments / المرفقات</Text>
 
-        {formData.fullBodyPhoto ? (
-          <View style={{ marginTop: 10, alignItems: "center" }}>
-            <Text style={styles.sectionTitle}>Full Body Photo</Text>
-            <Image src={formData.fullBodyPhoto} style={{ width: 180, height: 260, objectFit: "contain" }} />
+        {formData.passportScan ? (
+          <View style={styles.attachmentBox}>
+            <Text style={{ fontSize: 8, fontWeight: "bold", color: "#0A1931", marginBottom: 4 }}>PASSPORT COPY</Text>
+            <Image src={formData.passportScan} style={{ width: "95%", height: "90%", objectFit: "contain" }} />
+          </View>
+        ) : null}
+
+        {formData.medicalScan ? (
+          <View style={styles.attachmentBox}>
+            <Text style={{ fontSize: 8, fontWeight: "bold", color: "#0A1931", marginBottom: 4 }}>MEDICAL ATTACHMENT</Text>
+            <Image src={formData.medicalScan} style={{ width: "95%", height: "90%", objectFit: "contain" }} />
           </View>
         ) : null}
       </Page>
-
-      {formData.passportScan ? (
-        <Page size="A4" style={styles.page}>
-          <Text style={styles.sectionTitle}>PASSPORT ATTACHMENT</Text>
-          <View style={{ alignItems: "center", marginTop: 20 }}>
-            <Image src={formData.passportScan} style={{ width: 480, height: 320, objectFit: "contain" }} />
-          </View>
-        </Page>
-      ) : null}
-
-      {formData.medicalScan && partner.hasMedicalAttachment ? (
-        <Page size="A4" style={styles.page}>
-          <Text style={styles.sectionTitle}>MEDICAL EXAMINATION ATTACHMENT</Text>
-          <View style={{ alignItems: "center", marginTop: 20 }}>
-            <Image src={formData.medicalScan} style={{ width: 480, height: 320, objectFit: "contain" }} />
-          </View>
-        </Page>
-      ) : null}
     </Document>
   );
 }
