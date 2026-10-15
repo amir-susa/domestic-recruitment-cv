@@ -1,157 +1,135 @@
 ﻿import React, { createContext, useContext, useState } from "react";
 
-export interface ExperienceEntry {
+export interface ExperienceItem {
   country: string;
   years: string;
   months: string;
+  period?: string;
 }
 
 export interface CVFormData {
+  refNo: string;
+  date: string;
   fullName: string;
-  mothersName?: string;
-  phoneNo?: string;
-  livingTown?: string;
   nationality: string;
   religion: string;
+  placeOfBirth: string;
   dateOfBirth: string;
   age: string;
-  placeOfBirth: string;
+  livingTown: string;
   maritalStatus: string;
   numberOfChildren: string;
-  weight: string;
+  phoneNo: string;
   height: string;
+  weight: string;
   educationalQualification: string;
   passportNumber: string;
   passportDateOfIssue: string;
   passportPlaceOfIssue: string;
   passportDateOfExpiry: string;
-  englishSkill: "POOR" | "FAIR" | "FLUENT" | "GOOD";
-  arabicSkill: "POOR" | "FAIR" | "FLUENT" | "GOOD";
-  previousExperiences: ExperienceEntry[];
-  skills: {
-    babySitting?: boolean;
-    washing?: boolean;
-    cleaning?: boolean;
-    cooking?: boolean;
-    sewing?: boolean;
-    driving?: boolean;
-    houseWork?: boolean;
+  languages: {
+    arabic: string;
+    english: string;
   };
-  headshotPhoto?: string;
-  fullBodyPhoto?: string;
-  passportScan?: string;
-  medicalScan?: string;
-  selectedPartner?: "darein" | "al_andalus" | "general";
+  skills: {
+    babySitting: boolean;
+    washing: boolean;
+    cleaning: boolean;
+    cooking: boolean;
+  };
+  previousExperiences: ExperienceItem[];
+  headshotPhoto: string | null;
+  fullBodyPhoto: string | null;
+  passportScan: string | null;
+  medicalScan: string | null;
+  selectedPartner: string;
 }
 
-export const ARAB_COUNTRIES = [
-  "Saudi Arabia",
-  "Kuwait",
-  "UAE (United Arab Emirates)",
-  "Qatar",
-  "Oman",
-  "Bahrain",
-  "Lebanon",
-  "Jordan",
-  "Iraq",
-];
+interface CVFormContextType {
+  formData: CVFormData;
+  setFormData: React.Dispatch<React.SetStateAction<CVFormData>>;
+  updateFormField: (field: keyof CVFormData, value: any) => void;
+  resetForm: () => void;
+}
 
 const initialFormData: CVFormData = {
+  refNo: "ANDALUS-2026-0892",
+  date: new Date().toISOString().split("T")[0],
   fullName: "",
-  mothersName: "",
-  phoneNo: "",
-  livingTown: "",
-  nationality: "Ethiopia",
+  nationality: "Ethiopian",
   religion: "Muslim",
+  placeOfBirth: "Addis Ababa",
   dateOfBirth: "",
   age: "",
-  placeOfBirth: "",
+  livingTown: "Addis Ababa",
   maritalStatus: "Single",
   numberOfChildren: "0",
-  weight: "",
-  height: "",
+  phoneNo: "",
+  height: "155",
+  weight: "50",
   educationalQualification: "Primary Education",
   passportNumber: "",
   passportDateOfIssue: "",
   passportPlaceOfIssue: "Addis Ababa",
   passportDateOfExpiry: "",
-  englishSkill: "FAIR",
-  arabicSkill: "FAIR",
-  previousExperiences: [{ country: "Saudi Arabia", years: "2", months: "0" }],
+  languages: {
+    arabic: "Basic",
+    english: "Basic",
+  },
   skills: {
     babySitting: true,
     washing: true,
     cleaning: true,
     cooking: true,
-    sewing: false,
-    driving: false,
-    houseWork: true,
   },
+  previousExperiences: [{ country: "Saudi Arabia", years: "2", months: "0" }],
+  headshotPhoto: null,
+  fullBodyPhoto: null,
+  passportScan: null,
+  medicalScan: null,
+  selectedPartner: "al_andalus",
 };
-
-interface CVFormContextType {
-  formData: CVFormData;
-  updateFormData: (updates: Partial<CVFormData>) => void;
-  resetForm: () => void;
-  calculatePassportExpiry: (passportNum: string, issueDate: string, ageStr: string) => string;
-}
 
 const CVFormContext = createContext<CVFormContextType | undefined>(undefined);
 
 export const CVFormProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [formData, setFormData] = useState<CVFormData>(initialFormData);
 
-  const calculatePassportExpiry = (passportNum: string, issueDateStr: string, ageStr: string): string => {
-    if (!issueDateStr) return "";
-    const issueDate = new Date(issueDateStr);
-    if (isNaN(issueDate.getTime())) return "";
-    const numUpper = (passportNum || "").trim().toUpperCase();
-    const age = parseInt(ageStr || "0", 10);
-    let yearsToAdd = 5;
-    if (numUpper.startsWith("EQ") || numUpper.startsWith("EP")) {
-      yearsToAdd = 5;
-    } else if (numUpper.startsWith("E")) {
-      yearsToAdd = age >= 25 ? 10 : 5;
-    } else {
-      yearsToAdd = 5;
-    }
-    const expiryDate = new Date(issueDate);
-    expiryDate.setFullYear(expiryDate.getFullYear() + yearsToAdd);
-    expiryDate.setDate(expiryDate.getDate() - 1);
-    return expiryDate.toISOString().split("T")[0];
-  };
-
-  const updateFormData = (updates: Partial<CVFormData>) => {
+  const updateFormField = (field: keyof CVFormData, value: any) => {
     setFormData((prev) => {
-      const next = { ...prev, ...updates };
+      const updated = { ...prev, [field]: value };
 
-      // Rule: Place of Birth defaults to Living Town if updated
-      if (updates.livingTown !== undefined && !prev.placeOfBirth) {
-        next.placeOfBirth = updates.livingTown;
+      if (field === "dateOfBirth" && value) {
+        const birthDate = new Date(value);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+          age--;
+        }
+        updated.age = age > 0 ? age.toString() : "";
       }
 
-      // Rule: Passport Expiry Date Auto-Calculation
-      if (
-        updates.passportNumber !== undefined ||
-        updates.passportDateOfIssue !== undefined ||
-        updates.age !== undefined ||
-        updates.dateOfBirth !== undefined
-      ) {
-        const passportNum = updates.passportNumber ?? next.passportNumber;
-        const issueDate = updates.passportDateOfIssue ?? next.passportDateOfIssue;
-        const ageVal = updates.age ?? next.age;
-        if (issueDate) {
-          next.passportDateOfExpiry = calculatePassportExpiry(passportNum, issueDate, ageVal);
+      if (field === "passportDateOfIssue" && value) {
+        const issueDate = new Date(value);
+        if (!isNaN(issueDate.getTime())) {
+          const expiryDate = new Date(issueDate);
+          expiryDate.setFullYear(expiryDate.getFullYear() + 5);
+          expiryDate.setDate(expiryDate.getDate() - 1);
+          updated.passportDateOfExpiry = expiryDate.toISOString().split("T")[0];
         }
       }
-      return next;
+
+      return updated;
     });
   };
 
-  const resetForm = () => setFormData(initialFormData);
+  const resetForm = () => {
+    setFormData(initialFormData);
+  };
 
   return (
-    <CVFormContext.Provider value={{ formData, updateFormData, resetForm, calculatePassportExpiry }}>
+    <CVFormContext.Provider value={{ formData, setFormData, updateFormField, resetForm }}>
       {children}
     </CVFormContext.Provider>
   );
@@ -159,6 +137,8 @@ export const CVFormProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
 export const useCVForm = () => {
   const context = useContext(CVFormContext);
-  if (!context) throw new Error("useCVForm must be used within a CVFormProvider");
+  if (!context) {
+    throw new Error("useCVForm must be used within a CVFormProvider");
+  }
   return context;
 };

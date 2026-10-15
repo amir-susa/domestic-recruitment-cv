@@ -1,210 +1,74 @@
-import { useEffect, useState } from "react";
-import html2canvas from "html2canvas";
-import { PAGE_SIZE_MM } from "./tesnim-pdf-constants";
-import { PDFViewer } from "./pdf-viewer";
-import { buildCVFormView } from "./tesnim-form-factory";
-import { createImageService, type EmbeddedImage } from "./tesnim-image-service";
-
-const ASSET_DIR = "/src/assets";
-const IMAGE_SERVICE = createImageService(ASSET_DIR);
-
-enum Stage {
-  LOADING = "loading",
-  READY = "ready",
-  ERROR = "error",
-}
-
-interface PdfStage {
-  status: Stage;
-  message?: string;
-  error?: Error;
-}
-
-interface RenderedPdf {
-  dataUrl: string;
-  pages: number;
-}
-
-interface PdfImage {
-  data: string;
-  mime: "image/png";
-  width: number;
-  height: number;
-}
-
-interface Context {
-  formData: {
-    fullName: string;
-    dateOfBirth: string;
-    placeOfBirth: string;
-    maritalStatus: string;
-    children: string;
-    weight: string;
-    height: string;
-    education: string;
-    nationality: string;
-    religion: string;
-    languages: { english: string; arabic: string };
-    passportNumber: string;
-    passportIssueDate: string;
-    passportIssuePlace: string;
-    passportExpiryDate: string;
-    applicantPhoto: string | null;
-    fullPhoto: string | null;
-    passportPhoto: string | null;
-  };
-  experiences: Array<{ country: string; period: string }>;
-  skills: Record<string, boolean>;
-  date: string;
-  serialNo: string;
-}
-
-function useFormContext(): Context {
-  // The real app exposes a provider; this helper provides a type-safe
-  // stand-in so the PDF renderer can be developed/tested independently.
-  const [formData] = useState({
-    fullName: "Amir Sami Al-Mudhaf",
-    dateOfBirth: "1985-03-12",
-    placeOfBirth: "Jeddah",
-    maritalStatus: "Married",
-    children: "2",
-    weight: "72",
-    height: "175",
-    education: "Bachelor's Degree",
-    nationality: "Kuwait",
-    religion: "Muslim",
-    languages: { english: "Fluent", arabic: "Fluent" },
-    passportNumber: "K0012345",
-    passportIssueDate: "2010-01-15",
-    passportIssuePlace: "Kuwait",
-    passportExpiryDate: "2025-01-15",
-    applicantPhoto: null,
-    fullPhoto: null,
-    passportPhoto: null,
-  });
-
-  const [experiences] = useState([
-    { country: "Saudi Arabia", period: "3 Years 6 Months" },
-    { country: "United Arab Emirates", period: "2 Years 3 Months" },
-  ]);
-
-  const [skills] = useState({
-    babysitting: true,
-    washing: true,
-    cleaning: true,
-    cooking: true,
-    sewing: true,
-    driving: false,
-  });
-
-  const [date] = useState("2025-01-01");
-  const [serialNo] = useState("CV-2025-0001");
-
-  return { formData, experiences, skills, date, serialNo };
-}
+﻿import { useState } from "react";
+import { AlAndalusHtmlTemplate } from "./AlAndalusHtmlTemplate";
+import { generatePdf } from "./tesnim-pdf-generator";
 
 export function TesnimPdfRenderer() {
-  const context = useFormContext();
-  const view = buildCVFormView(context.formData);
-  const [stage, setStage] = useState<PdfStage>({ status: Stage.LOADING });
-  const [pdf, setPdf] = useState<RenderedPdf | null>(null);
-  const [error, setError] = useState<Error | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
 
-  useEffect(() => {
-    let cancelled = false;
-
-    async function render() {
-      setStage({ status: Stage.LOADING });
-      setError(null);
-
-      try {
-        const logo = await IMAGE_SERVICE.ensureEmbedded("tesnim_logo.png");
-        if (!logo) {
-          throw new Error("Could not load tesnim_logo.png");
-        }
-
-        const applicant = await IMAGE_SERVICE.ensureEmbedded("Applicant_Photo.jpeg");
-        const full = await IMAGE_SERVICE.ensureEmbedded("Full_Photo.jpeg");
-        const passport = await IMAGE_SERVICE.ensureEmbedded("Passport.jpeg");
-
-        const images = {
-          logo,
-          applicantPhoto: applicant,
-          fullPhoto: full,
-          passportPhoto: passport,
-        };
-
-        const mounted = !cancelled;
-        if (!mounted) return;
-
-        const pdf = await renderPdf(view, images);
-        const pages = countPdfPages(pdf.dataUrl);
-
-        setPdf({
-          dataUrl: pdf.dataUrl,
-          pages,
-        });
-
-        setStage({ status: Stage.READY });
-      } catch (err) {
-        const error = err instanceof Error ? err : new Error(String(err));
-        setError(error);
-        setStage({ status: Stage.ERROR, error });
-      }
-    }
-
-    render();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  return (
-    <div style={{ width: "100%", maxWidth: "800px" }}>
-      {stage.status === Stage.LOADING ? (
-        <div style={{ padding: "16px", textAlign: "center" }}>Loading PDF preview...</div>
-      ) : stage.status === Stage.ERROR ? (
-        <div style={{ padding: "16px", textAlign: "center", color: "red" }}>
-          Failed to render PDF: {stage.error?.message}
-        </div>
-      ) : (
-        <PDFViewer
-          dataUrl={pdf!.dataUrl}
-          pages={pdf!.pages}
-          width={PAGE_SIZE_MM.width}
-          height={PAGE_SIZE_MM.height * 2}
-        />
-      )}
-    </div>
-  );
-}
-
-async function renderPdf(
-  view: ReturnType<typeof buildCVFormView>,
-  images: {
-    logo: EmbeddedImage | null;
-    applicantPhoto: EmbeddedImage | null;
-    fullPhoto: EmbeddedImage | null;
-    passportPhoto: EmbeddedImage | null;
-  },
-): Promise<{ dataUrl: string; pages: number }> {
-  const canvas = await html2canvas(document.body, {
-    scale: 2,
-    backgroundColor: "#ffffff",
-    useCORS: true,
-    logging: false,
-    width: PAGE_SIZE_MM.width,
-    height: PAGE_SIZE_MM.height,
+  // Sample data for testing the live preview
+  const [formData] = useState({
+    fullName: "Lula Mesfen",
+    nationality: "Ethiopia",
+    religion: "Muslim",
+    placeOfBirth: "Addis Ababa",
+    dateOfBirth: "1998-02-15",
+    age: "28",
+    livingTown: "Addis Ababa",
+    maritalStatus: "Single",
+    numberOfChildren: "0",
+    phoneNo: "+251 91 123 4567",
+    mothersName: "Almaz Tadesse",
+    height: "156",
+    weight: "55",
+    educationalQualification: "Primary Education",
+    passportNumber: "EQ213243",
+    passportDateOfIssue: "2026-09-08",
+    passportPlaceOfIssue: "Addis Ababa",
+    passportDateOfExpiry: "2031-09-07",
+    selectedPartner: "al_andalus",
+    previousExperiences: [
+      { country: "Saudi Arabia", years: "2", months: "0" }
+    ],
+    headshotPhoto: null,
+    fullBodyPhoto: null,
+    passportScan: null,
+    medicalScan: null,
   });
 
-  const dataUrl = canvas.toDataURL("image/png");
+  const handleDownloadPdf = async () => {
+    try {
+      setIsExporting(true);
+      const blob = await generatePdf(formData as any);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `CV_${formData.fullName}.pdf`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Export failed:", err);
+      alert("Failed to export PDF");
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
-  return { dataUrl, pages: 2 };
-}
+  return (
+    <div style={{ width: "100%", maxWidth: "900px", margin: "0 auto", paddingBottom: "40px" }}>
+      {/* Action Bar */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", background: "#0A1931", padding: "12px 20px", borderRadius: "8px" }}>
+        <span style={{ color: "#ffffff", fontWeight: "bold", fontSize: "14px" }}>Al-Andalus Live CV Preview</span>
+        <button
+          onClick={handleDownloadPdf}
+          disabled={isExporting}
+          style={{ backgroundColor: "#88C057", color: "#0A1931", border: "none", padding: "8px 16px", borderRadius: "6px", fontWeight: "bold", cursor: "pointer" }}
+        >
+          {isExporting ? "Generating PDF..." : "Download PDF"}
+        </button>
+      </div>
 
-function countPdfPages(dataUrl: string): number {
-  // HTML2Canvas is not a PDF library; this is a placeholder for the
-  // production renderer, which will return the actual page count.
-  return 2;
+      {/* Render the HTML template directly in the DOM so html2pdf can capture it */}
+      <AlAndalusHtmlTemplate formData={formData as any} />
+    </div>
+  );
 }
