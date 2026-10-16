@@ -1,144 +1,94 @@
-﻿import React, { createContext, useContext, useState } from "react";
-
-export interface ExperienceItem {
-  country: string;
-  years: string;
-  months: string;
-  period?: string;
-}
+﻿import React, { createContext } from 'react';
 
 export interface CVFormData {
-  refNo: string;
-  date: string;
   fullName: string;
-  nationality: string;
-  religion: string;
-  placeOfBirth: string;
-  dateOfBirth: string;
-  age: string;
-  livingTown: string;
-  maritalStatus: string;
-  numberOfChildren: string;
-  phoneNo: string;
-  height: string;
-  weight: string;
-  educationalQualification: string;
-  passportNumber: string;
-  passportDateOfIssue: string;
-  passportPlaceOfIssue: string;
-  passportDateOfExpiry: string;
-  languages: {
-    arabic: string;
-    english: string;
-  };
-  skills: {
-    babySitting: boolean;
-    washing: boolean;
-    cleaning: boolean;
-    cooking: boolean;
-  };
-  previousExperiences: ExperienceItem[];
-  headshotPhoto: string | null;
-  fullBodyPhoto: string | null;
-  passportScan: string | null;
-  medicalScan: string | null;
   selectedPartner: string;
+  refNo?: string;
+  date?: string;
+  nationality?: string;
+  religion?: string;
+  placeOfBirth?: string;
+  dateOfBirth?: string;
+  age?: string;
+  height?: string;
+  weight?: string;
+  maritalStatus?: string;
+  numberOfChildren?: string;
+  phoneNo?: string;
+  educationalQualification?: string;
+  livingTown?: string;
+  passportNumber?: string;
+  passportDateOfIssue?: string;
+  passportPlaceOfIssue?: string;
+  passportDateOfExpiry?: string;
+  headshotPhoto?: string;
+  fullBodyPhoto?: string;
+  passportScan?: string;
+  medicalScan?: string;
+  languages?: {
+    arabic?: string;
+    english?: string;
+  };
+  skills?: {
+    babySitting?: boolean;
+    washing?: boolean;
+    cleaning?: boolean;
+    cooking?: boolean;
+    sewing?: boolean;
+    driving?: boolean;
+  };
+  previousExperiences?: Array<{
+    country: string;
+    period?: string;
+    years?: string;
+    months?: string;
+  }>;
 }
 
-interface CVFormContextType {
-  formData: CVFormData;
-  setFormData: React.Dispatch<React.SetStateAction<CVFormData>>;
-  updateFormField: (field: keyof CVFormData, value: any) => void;
-  resetForm: () => void;
-}
-
-const initialFormData: CVFormData = {
-  refNo: "ANDALUS-2026-0892",
-  date: new Date().toISOString().split("T")[0],
-  fullName: "",
-  nationality: "Ethiopian",
-  religion: "Muslim",
-  placeOfBirth: "Addis Ababa",
-  dateOfBirth: "",
-  age: "",
-  livingTown: "Addis Ababa",
-  maritalStatus: "Single",
-  numberOfChildren: "0",
-  phoneNo: "",
-  height: "155",
-  weight: "50",
-  educationalQualification: "Primary Education",
-  passportNumber: "",
-  passportDateOfIssue: "",
-  passportPlaceOfIssue: "Addis Ababa",
-  passportDateOfExpiry: "",
+export const defaultCVFormData: CVFormData = {
+  fullName: 'LULA MESFEN GOSHU',
+  selectedPartner: 'al_andalus',
+  refNo: 'ANDALUS-2026-0892',
+  date: '2026-10-16',
+  nationality: 'Ethiopian',
+  religion: 'Muslim',
+  placeOfBirth: 'Addis Ababa',
+  dateOfBirth: '1998-02-15',
+  age: '28',
+  height: '155',
+  weight: '50',
+  maritalStatus: 'Single',
+  numberOfChildren: '0',
+  phoneNo: '+251 911 234567',
+  educationalQualification: 'Primary Education',
+  passportNumber: 'EQ454545',
+  passportDateOfIssue: '2026-10-15',
+  passportPlaceOfIssue: 'Addis Ababa',
+  passportDateOfExpiry: '2031-10-14',
   languages: {
-    arabic: "Basic",
-    english: "Basic",
+    arabic: 'Basic',
+    english: 'Basic',
   },
   skills: {
     babySitting: true,
     washing: true,
     cleaning: true,
     cooking: true,
+    sewing: false,
+    driving: false,
   },
-  previousExperiences: [{ country: "Saudi Arabia", years: "2", months: "0" }],
-  headshotPhoto: null,
-  fullBodyPhoto: null,
-  passportScan: null,
-  medicalScan: null,
-  selectedPartner: "al_andalus",
+  previousExperiences: [
+    { country: 'Saudi Arabia', period: '2 Years, 3 Months' },
+    { country: 'Oman', period: '1 Year, 6 Months' },
+  ],
 };
 
-const CVFormContext = createContext<CVFormContextType | undefined>(undefined);
+export interface CVFormContextType {
+  formData: CVFormData;
+  setFormData: React.Dispatch<React.SetStateAction<CVFormData>>;
+}
 
-export const CVFormProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [formData, setFormData] = useState<CVFormData>(initialFormData);
-
-  const updateFormField = (field: keyof CVFormData, value: any) => {
-    setFormData((prev) => {
-      const updated = { ...prev, [field]: value };
-
-      if (field === "dateOfBirth" && value) {
-        const birthDate = new Date(value);
-        const today = new Date();
-        let age = today.getFullYear() - birthDate.getFullYear();
-        const m = today.getMonth() - birthDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-          age--;
-        }
-        updated.age = age > 0 ? age.toString() : "";
-      }
-
-      if (field === "passportDateOfIssue" && value) {
-        const issueDate = new Date(value);
-        if (!isNaN(issueDate.getTime())) {
-          const expiryDate = new Date(issueDate);
-          expiryDate.setFullYear(expiryDate.getFullYear() + 5);
-          expiryDate.setDate(expiryDate.getDate() - 1);
-          updated.passportDateOfExpiry = expiryDate.toISOString().split("T")[0];
-        }
-      }
-
-      return updated;
-    });
-  };
-
-  const resetForm = () => {
-    setFormData(initialFormData);
-  };
-
-  return (
-    <CVFormContext.Provider value={{ formData, setFormData, updateFormField, resetForm }}>
-      {children}
-    </CVFormContext.Provider>
-  );
-};
-
-export const useCVForm = () => {
-  const context = useContext(CVFormContext);
-  if (!context) {
-    throw new Error("useCVForm must be used within a CVFormProvider");
-  }
-  return context;
-};
+export const CVFormContext = createContext<CVFormContextType>({
+  formData: defaultCVFormData,
+  setFormData: () => {},
+});
