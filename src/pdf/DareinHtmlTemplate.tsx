@@ -1,395 +1,335 @@
 ﻿import React from 'react';
-import { FileText, User, Image as ImageIcon } from 'lucide-react';
-import type { CVFormData } from "../context/CVFormContext";
-import dareinLogoImg from "../assets/logo.png";
-import mobileIconImg from "../assets/mobile-icon.png";
+import type { CVFormData } from '../context/CVFormContext';
+import logoImg from '../assets/logo.png';
+import mobileIconImg from '../assets/mobile-icon.png';
 
 interface Props {
   formData: CVFormData;
 }
 
 export function DareinHtmlTemplate({ formData }: Props) {
+  const checkMark = "✓";
+
+  const getLanguageCheck = (lang: string | undefined, level: string) => {
+    if (!lang) return false;
+    return lang.toLowerCase() === level.toLowerCase();
+  };
+
   return (
-    <div className="flex flex-col items-center text-slate-900 bg-white font-sans">
+    <div className="darein-template-wrapper text-slate-900 font-serif bg-white">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap');
-
-        .font-garamond {
-          font-family: 'EB Garamond', 'Garamond', 'Georgia', serif !important;
-        }
-
-        .cv-font-arabic {
-          font-family: 'Arial', Tahoma, Geneva, sans-serif !important;
-          direction: rtl !important;
-          unicode-bidi: embed !important;
-          line-height: 1.35 !important;
-        }
-
-        .cv-page-container {
-          width: 210mm !important;
-          height: 296mm !important;
-          max-height: 296mm !important;
-          box-sizing: border-box !important;
-          position: relative !important;
-          background: #ffffff !important;
-          overflow: hidden !important;
-          margin: 0 !important;
-          padding: 0 !important;
-          border: 10px solid rgb(0, 0, 128) !important;
-        }
-
-        .page-break-after-always {
-          page-break-after: always !important;
-          break-after: page !important;
-        }
-
         @media print {
-          * {
-            -webkit-print-color-adjust: exact !important;
-            print-color-adjust: exact !important;
-          }
-          body {
-            background: white !important;
-            padding: 0 !important;
-            margin: 0 !important;
-          }
-          .cv-page-container {
-            box-shadow: none !important;
-            margin: 0 !important;
+          .darein-page {
             width: 210mm !important;
             height: 296mm !important;
+            max-height: 296mm !important;
             page-break-after: always !important;
             break-after: page !important;
-          }
-          @page {
-            size: A4 portrait;
-            margin: 0mm;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+            overflow: hidden !important;
+            box-sizing: border-box !important;
+            position: relative !important;
+            margin: 0 !important;
+            padding: 8mm !important;
+            background: #ffffff !important;
           }
         }
       `}</style>
 
-      <CVPage1 formData={formData} />
-      <CVPage2 formData={formData} />
-    </div>
-  );
-}
-
-function DareinHeader() {
-  return (
-    <div className="w-full bg-white text-[rgb(0,0,128)] p-3 border-b-2 border-[rgb(0,0,128)]">
-      <div className="flex justify-between items-center mb-1.5">
-        <div className="flex-1">
-          <h1 className="font-garamond text-2xl font-black uppercase tracking-wider text-[rgb(0,0,128)]">
-            DAREIN EST
-          </h1>
-          <div className="bg-[rgb(0,0,128)] text-white text-[10px] font-bold px-2 py-0.5 rounded-xs mt-1 inline-block font-garamond uppercase tracking-wide">
-            FOR RECRUITMENT OF DOMESTIC MANPOWER
-          </div>
-        </div>
-
-        <div className="w-16 h-16 flex items-center justify-center shrink-0 mx-2">
-          <img 
-            src={dareinLogoImg} 
-            alt="Darein Est Logo" 
-            className="max-h-16 max-w-16 object-contain"
-            onError={(e) => {
-              (e.target as HTMLElement).style.display = 'none';
-            }}
-          />
-        </div>
-
-        <div className="text-right flex-1">
-          <h1 className="cv-font-arabic text-2xl font-extrabold text-[rgb(0,0,128)]">
-            دارين التأسيس
-          </h1>
-          <div className="bg-[rgb(0,0,128)] text-white text-[10px] font-bold px-2 py-0.5 rounded-xs mt-1 inline-block cv-font-arabic">
-            لتوظيف القوى العاملة المحلية
-          </div>
-        </div>
-      </div>
-
-      <div className="bg-[rgb(0,0,128)] text-white text-[11px] font-medium py-1 px-3 text-center rounded-sm space-y-0.5">
-        <p className="cv-font-arabic">الفروانية بلوك ٤ - حبيب مناور شارع - عربيد معرض - مكتب الميزانين رقم ١ - الكويت</p>
-        <p className="font-garamond">Farwaniya Block 4, Habib Menawer Street, Arbeed gallery, Mezanin office No. 1, Kuwait</p>
-      </div>
-
-      <div className="mt-1.5 text-center text-sm font-bold flex items-center justify-center gap-2">
-        <span className="font-garamond text-slate-800">Afnan 69984733</span>
-        <img 
-          src={mobileIconImg} 
-          alt="Mobile" 
-          className="w-4 h-4 object-contain inline-block mx-1"
-          onError={(e) => {
-            (e.target as HTMLElement).style.display = 'none';
-          }}
-        />
-        <span className="cv-font-arabic text-slate-800">أفنان ٦٩٩٨٤٧٣٣</span>
-      </div>
-
-      <h2 className="text-center text-xl font-bold font-garamond uppercase text-[rgb(0,0,128)] mt-1">
-        Application for Employment
-      </h2>
-    </div>
-  );
-}
-
-function CVPage1({ formData }: { formData: any }) {
-  const experiences = formData.previousExperiences || [];
-  const languages = formData.languages || { arabic: "Basic", english: "Basic" };
-  const skills = formData.skills || { babySitting: true, washing: true, cleaning: true, cooking: true, sewing: false, driving: false };
-
-  return (
-    <div id="darein-page-1" className="cv-page-container page-break-after-always shadow-2xl">
-      <DareinHeader />
-
-      <div className="p-3.5 space-y-2.5 box-border">
-        {/* Reference & Name Bar */}
-        <div className="grid grid-cols-12 gap-2.5 items-stretch">
-          <div className="col-span-8 flex flex-col justify-between">
-            <div className="grid grid-cols-2 gap-2 border border-[rgb(0,0,128)] bg-slate-50 p-1.5 rounded-xs text-xs font-semibold">
-              <div className="flex gap-1.5 items-center">
-                <span className="text-[rgb(0,0,128)] font-bold font-garamond text-sm">Date:</span>
-                <span className="font-mono text-slate-900">{formData.date || new Date().toISOString().split('T')[0]}</span>
+      {/* PAGE 1: CANDIDATE PROFILE */}
+      <div className="darein-page cv-page-container w-[210mm] min-h-[296mm] max-h-[296mm] p-5 bg-white border-4 border-[#000080] shadow-md mb-8 print:mb-0 print:shadow-none flex flex-col justify-between box-sizing-border overflow-hidden">
+        <div>
+          {/* Header Block with Logo */}
+          <div className="border-b-2 border-[#000080] pb-2 mb-2">
+            <div className="flex items-center justify-between">
+              <div className="w-1/3">
+                <h1 className="text-xl font-black text-[#000080] tracking-wider uppercase font-serif">DAREIN EST</h1>
+                <div className="bg-[#000080] text-white text-[9px] font-bold px-1.5 py-0.5 inline-block uppercase">
+                  FOR RECRUITMENT OF DOMESTIC MANPOER
+                </div>
               </div>
-              <div className="flex gap-1.5 items-center border-l border-slate-300 pl-2">
-                <span className="text-[rgb(0,0,128)] font-bold font-garamond text-sm">Serial No:</span>
-                <span className="font-mono text-slate-900">{formData.refNo || 'DAR-2026-001'}</span>
+
+              {/* Logo from src/assets/logo.png */}
+              <div className="w-1/3 flex justify-center">
+                <img src={logoImg} alt="Darein Logo" className="h-14 object-contain" />
+              </div>
+
+              <div className="w-1/3 text-right">
+                <h2 className="text-xl font-black text-[#000080] font-sans dir-rtl">دارين التأسيس</h2>
+                <div className="bg-[#000080] text-white text-[9px] font-bold px-1.5 py-0.5 inline-block dir-rtl">
+                  لتوظيف القوى العاملة المنزلية
+                </div>
               </div>
             </div>
 
-            <div className="border border-[rgb(0,0,128)] bg-[#8BBDFA]/40 p-2 rounded-xs flex justify-between items-center mt-2">
-              <span className="text-xs font-bold font-garamond text-[rgb(0,0,128)] uppercase tracking-wider">FULL NAME</span>
-              <span className="text-base font-extrabold font-garamond text-[rgb(0,0,128)] uppercase tracking-wide px-2">{formData.fullName || 'FULL CANDIDATE NAME'}</span>
-              <span className="cv-font-arabic text-xs font-bold text-[rgb(0,0,128)]">الاسم الكامل</span>
+            {/* Address Banner */}
+            <div className="mt-2 bg-[#000080] text-white text-[10px] py-1 px-2 text-center font-bold font-sans space-y-0.5">
+              <div dir="rtl">الفروانية بلوك ٤ - حبيب مناور شارع - عربيد معرض - مكاتب الميزانين رقم - ١ الكويت</div>
+              <div>Farwaniya Block 4, Habib Menawer Steet, Arbeed gallery, Mezanin office No. 1,</div>
             </div>
           </div>
 
-          <div className="col-span-4 border-2 border-[rgb(0,0,128)] rounded-xs bg-white h-36 flex flex-col items-center justify-center overflow-hidden relative shadow-2xs">
-            {formData.headshotPhoto ? (
-              <img src={formData.headshotPhoto} alt="Applicant Photo" className="w-full h-full object-cover" />
-            ) : (
-              <div className="text-center text-slate-400 p-1">
-                <User className="w-6 h-6 mx-auto mb-1 text-slate-300" />
-                <p className="text-xs font-bold font-garamond uppercase text-slate-600">Applicant photo</p>
-                <p className="text-[10px] text-slate-500">2.14" x 2.03"</p>
+          {/* Top Section with Headshot Aligned Right */}
+          <div className="grid grid-cols-4 gap-2 mb-2">
+            {/* Left 3 Columns: Phone, Title, Date/Serial, Full Name */}
+            <div className="col-span-3 space-y-1.5">
+              {/* Phone Line with Mobile Icon */}
+              <div className="flex items-center justify-center gap-2 text-xs font-bold text-[#000080] py-0.5">
+                <span>Afnan 69984733</span>
+                <img src={mobileIconImg} alt="Mobile" className="w-4 h-4 object-contain" />
+                <span dir="rtl">أفنان ٦٩٩٨٤٧٣٣</span>
               </div>
-            )}
-          </div>
-        </div>
 
-        {/* 2-Column Main Layout */}
-        <div className="grid grid-cols-12 gap-3">
-          <div className="col-span-7 space-y-2">
-            {/* Details of Application */}
-            <div className="border border-[rgb(0,0,128)] rounded-xs overflow-hidden text-xs shadow-2xs">
-              <div className="bg-[#8BBDFA]/40 text-[rgb(0,0,128)] px-2.5 py-1 font-bold flex justify-between items-center border-b border-[rgb(0,0,128)]">
-                <span className="font-garamond text-sm uppercase tracking-wider">DETAILS OF APPLICATION</span>
-                <span className="cv-font-arabic text-xs">تفاصيل التطبيق</span>
+              <h3 className="text-center font-black text-base text-[#000080] font-serif tracking-tight">
+                Application for Employment
+              </h3>
+
+              {/* Date & Serial No Bar */}
+              <div className="grid grid-cols-2 border border-[#000080] text-[11px] font-bold bg-slate-50">
+                <div className="p-1 border-r border-[#000080] flex gap-2">
+                  <span className="bg-[#8BAAD0] text-[#000080] px-1.5 py-0.5 font-black">Date:</span>
+                  <span className="font-extrabold text-slate-900">{formData.date || '2026-10-16'}</span>
+                </div>
+                <div className="p-1 flex gap-2 justify-end">
+                  <span className="bg-[#8BAAD0] text-[#000080] px-1.5 py-0.5 font-black">Serial No:</span>
+                  <span className="font-extrabold text-slate-900">{formData.refNo || 'DAREIN-2026-0892'}</span>
+                </div>
               </div>
-              <div className="divide-y divide-slate-200 bg-white">
-                <Row en="Nationality" ar="جنسية" val={formData.nationality} />
-                <Row en="Religion" ar="دين" val={formData.religion} />
-                <Row en="Date of Birth" ar="تاريخ الميلاد" val={formData.dateOfBirth} />
-                <Row en="Age" ar="عمر" val={formData.age ? `${formData.age} Yrs` : ''} />
-                <Row en="Place of Birth" ar="مكان الميلاد" val={formData.placeOfBirth} />
-                <Row en="Marital Status" ar="الحالة الاجتماعية" val={formData.maritalStatus} />
-                <Row en="No. of Children" ar="عدد الأطفال" val={formData.numberOfChildren} />
-                <Row en="Weight(KG)" ar="وزن" val={formData.weight ? `${formData.weight} kg` : ''} />
-                <Row en="Height(cm)" ar="ارتفاع" val={formData.height ? `${formData.height} cm` : ''} />
-                <Row en="Educational Qualification" ar="المؤهل التعليمي" val={formData.educationalQualification} />
+
+              {/* Full Name Bar */}
+              <div className="grid grid-cols-4 border border-[#000080] text-xs font-bold bg-white">
+                <div className="bg-[#8BAAD0] text-[#000080] p-1 font-black flex items-center">
+                  FULL NAME
+                </div>
+                <div className="col-span-2 p-1 font-black text-slate-900 uppercase flex items-center text-sm">
+                  {formData.fullName || 'LULA MESFEN GOSHU'}
+                </div>
+                <div className="bg-[#8BAAD0] text-[#000080] p-1 font-bold text-right flex items-center justify-end dir-rtl">
+                  الاسم الكامل
+                </div>
               </div>
             </div>
 
-            {/* Language Skills */}
-            <div className="border border-[rgb(0,0,128)] rounded-xs overflow-hidden text-xs shadow-2xs">
-              <div className="bg-[#8BBDFA]/40 text-[rgb(0,0,128)] px-2.5 py-1 font-bold flex justify-between items-center border-b border-[rgb(0,0,128)]">
-                <span className="font-garamond text-sm uppercase tracking-wider">LANGUAGE SKILLS</span>
-                <span className="cv-font-arabic text-xs">المهارات اللغوية</span>
-              </div>
-              <table className="w-full text-center border-collapse text-xs">
+            {/* Right 1 Column: Applicant Photo (2.14" x 2.03") */}
+            <div className="col-span-1 border-2 border-[#000080] h-[150px] flex flex-col items-center justify-center p-1 bg-white">
+              {formData.headshotPhoto ? (
+                <img src={formData.headshotPhoto} alt="Headshot" className="max-h-full max-w-full object-contain" />
+              ) : (
+                <div className="text-center text-slate-500 text-[10px] font-bold font-sans">
+                  Applicant photo<br />2.14" x 2.03"
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Main Grid: Info/Skills Left Column vs Full Photo Right Column */}
+          <div className="grid grid-cols-3 gap-2">
+            {/* Left 2 Columns: Application Details, Passport, Language, Experience, Skills */}
+            <div className="col-span-2 space-y-2">
+              {/* DETAILS OF APPLICATION Table */}
+              <table className="w-full text-[10px] border-collapse border border-[#000080] font-sans">
                 <thead>
-                  <tr className="bg-[#8BBDFA]/30 font-bold border-b border-[rgb(0,0,128)] text-[rgb(0,0,128)]">
-                    <th className="p-1 border-r border-[rgb(0,0,128)] font-garamond text-xs">ENGLISH</th>
-                    <th className="p-1 border-r border-[rgb(0,0,128)] cv-font-arabic text-xs">إنجليزي</th>
-                    <th className="p-1 border-r border-[rgb(0,0,128)] font-garamond text-xs">ARABIC</th>
-                    <th className="p-1 cv-font-arabic text-xs">عربي</th>
+                  <tr className="bg-[#8BAAD0] text-[#000080] font-black">
+                    <th colSpan={3} className="p-1 text-left border-b border-[#000080] flex justify-between">
+                      <span>DETAILS OF APPLICATION</span>
+                      <span dir="rtl">تفاصيل التطبيق</span>
+                    </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200 bg-white">
+                <tbody className="divide-y divide-[#000080]">
+                  <tr><td className="p-0.5 font-bold bg-[#8BAAD0]/30 w-1/3">Nationality</td><td className="p-0.5 font-black text-sm text-center">{formData.nationality || 'Ethiopian'}</td><td className="p-0.5 text-right font-bold dir-rtl bg-[#8BAAD0]/30 w-1/4">جنسية</td></tr>
+                  <tr><td className="p-0.5 font-bold bg-[#8BAAD0]/30">Religion</td><td className="p-0.5 font-black text-sm text-center">{formData.religion || 'Christian'}</td><td className="p-0.5 text-right font-bold dir-rtl bg-[#8BAAD0]/30">دين</td></tr>
+                  <tr><td className="p-0.5 font-bold bg-[#8BAAD0]/30">Date of Birth</td><td className="p-0.5 font-black text-center">{formData.dateOfBirth || '1998-02-15'}</td><td className="p-0.5 text-right font-bold dir-rtl bg-[#8BAAD0]/30">تاريخ الميلاد</td></tr>
+                  <tr><td className="p-0.5 font-bold bg-[#8BAAD0]/30">Age</td><td className="p-0.5 font-black text-center">{formData.age ? `${formData.age}` : '28'}</td><td className="p-0.5 text-right font-bold dir-rtl bg-[#8BAAD0]/30">عمر</td></tr>
+                  <tr><td className="p-0.5 font-bold bg-[#8BAAD0]/30">Place of Birth</td><td className="p-0.5 font-black text-center">{formData.placeOfBirth || 'Addis Ababa'}</td><td className="p-0.5 text-right font-bold dir-rtl bg-[#8BAAD0]/30">مكان الميلاد</td></tr>
+                  <tr><td className="p-0.5 font-bold bg-[#8BAAD0]/30">Marital Status</td><td className="p-0.5 font-black text-center">{formData.maritalStatus || 'Single'}</td><td className="p-0.5 text-right font-bold dir-rtl bg-[#8BAAD0]/30">الحالة الاجتماعية</td></tr>
+                  <tr><td className="p-0.5 font-bold bg-[#8BAAD0]/30">No. of Children</td><td className="p-0.5 font-black text-center">{formData.numberOfChildren || '0'}</td><td className="p-0.5 text-right font-bold dir-rtl bg-[#8BAAD0]/30">عدد الأطفال</td></tr>
+                  <tr><td className="p-0.5 font-bold bg-[#8BAAD0]/30">Weight(KG)</td><td className="p-0.5 font-black text-center">{formData.weight || '52.0'}</td><td className="p-0.5 text-right font-bold dir-rtl bg-[#8BAAD0]/30">وزن</td></tr>
+                  <tr><td className="p-0.5 font-bold bg-[#8BAAD0]/30">Height(cm)</td><td className="p-0.5 font-black text-center">{formData.height || '160.0'}</td><td className="p-0.5 text-right font-bold dir-rtl bg-[#8BAAD0]/30">إرتفاع</td></tr>
+                  <tr><td className="p-0.5 font-bold bg-[#8BAAD0]/30">Educational Qualification</td><td className="p-0.5 font-black text-center">{formData.educationalQualification || 'Primary'}</td><td className="p-0.5 text-right font-bold dir-rtl bg-[#8BAAD0]/30">المؤهل التعليمي</td></tr>
+                </tbody>
+              </table>
+
+              {/* PASSPORT DETAILS Table */}
+              <table className="w-full text-[10px] border-collapse border border-[#000080] font-sans">
+                <thead>
+                  <tr className="bg-[#8BAAD0] text-[#000080] font-black">
+                    <th colSpan={3} className="p-1 text-left border-b border-[#000080] flex justify-between">
+                      <span>PASSPORT DETAILS</span>
+                      <span dir="rtl">تفاصيل جواز السفر</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#000080]">
+                  <tr><td className="p-0.5 font-bold bg-[#8BAAD0]/30 w-1/3">NUMBER</td><td className="p-0.5 font-black text-center">{formData.passportNumber || 'EQ'}</td><td className="p-0.5 text-right font-bold dir-rtl bg-[#8BAAD0]/30 w-1/4">رقم</td></tr>
+                  <tr><td className="p-0.5 font-bold bg-[#8BAAD0]/30">DATE OF ISSUE</td><td className="p-0.5 font-black text-center">{formData.passportDateOfIssue || ''}</td><td className="p-0.5 text-right font-bold dir-rtl bg-[#8BAAD0]/30">تاريخ الإصدار</td></tr>
+                  <tr><td className="p-0.5 font-bold bg-[#8BAAD0]/30">PLACE OF ISSUE</td><td className="p-0.5 font-black text-center uppercase">{formData.passportPlaceOfIssue || 'ADDIS ABABA'}</td><td className="p-0.5 text-right font-bold dir-rtl bg-[#8BAAD0]/30">مكان الإصدار</td></tr>
+                  <tr><td className="p-0.5 font-bold bg-[#8BAAD0]/30">DATE OF EXP</td><td className="p-0.5 font-black text-center">{formData.passportDateOfExpiry || ''}</td><td className="p-0.5 text-right font-bold dir-rtl bg-[#8BAAD0]/30">تاريخ الانتهاء</td></tr>
+                </tbody>
+              </table>
+
+              {/* LANGUAGE SKILLS Table */}
+              <table className="w-full text-[10px] border-collapse border border-[#000080] font-sans text-center">
+                <thead>
+                  <tr className="bg-[#8BAAD0] text-[#000080] font-black">
+                    <th colSpan={4} className="p-0.5 text-left flex justify-between">
+                      <span>LANGUAGE SKILLS</span>
+                      <span dir="rtl">المهارات اللغوية</span>
+                    </th>
+                  </tr>
+                  <tr className="bg-[#8BAAD0]/40 text-[#000080] font-bold">
+                    <th className="p-0.5 border border-[#000080] text-left">ENGLISH</th>
+                    <th className="p-0.5 border border-[#000080] dir-rtl">إنجليزي</th>
+                    <th className="p-0.5 border border-[#000080]">ARABIC</th>
+                    <th className="p-0.5 border border-[#000080] dir-rtl">عربي</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#000080]">
                   <tr>
-                    <td className="p-1 border-r border-slate-200 font-garamond font-bold text-slate-700">POOR</td>
-                    <td className="p-1 border-r border-slate-200 font-bold text-[rgb(0,0,128)]">{languages.english === 'Poor' ? '✓' : ''}</td>
-                    <td className="p-1 border-r border-slate-200 font-garamond font-bold text-slate-700">POOR</td>
-                    <td className="p-1 font-bold text-[rgb(0,0,128)]">{languages.arabic === 'Poor' ? '✓' : ''}</td>
+                    <td className="p-0.5 font-bold bg-[#8BAAD0]/30 text-left">POOR</td>
+                    <td className="p-0.5 border-r border-[#000080]">{getLanguageCheck(formData.languages?.english, 'poor') ? checkMark : ''}</td>
+                    <td className="p-0.5">{getLanguageCheck(formData.languages?.arabic, 'poor') ? checkMark : ''}</td>
+                    <td className="p-0.5 font-bold bg-[#8BAAD0]/30 text-right dir-rtl">فقير</td>
                   </tr>
                   <tr>
-                    <td className="p-1 border-r border-slate-200 font-garamond font-bold text-slate-700">FAIR</td>
-                    <td className="p-1 border-r border-slate-200 font-bold text-[rgb(0,0,128)]">{languages.english === 'Fair' ? '✓' : ''}</td>
-                    <td className="p-1 border-r border-slate-200 font-garamond font-bold text-slate-700">FAIR</td>
-                    <td className="p-1 font-bold text-[rgb(0,0,128)]">{languages.arabic === 'Fair' ? '✓' : ''}</td>
+                    <td className="p-0.5 font-bold bg-[#8BAAD0]/30 text-left">FAIR</td>
+                    <td className="p-0.5 border-r border-[#000080]">{getLanguageCheck(formData.languages?.english, 'fair') ? checkMark : ''}</td>
+                    <td className="p-0.5">{getLanguageCheck(formData.languages?.arabic, 'fair') ? checkMark : ''}</td>
+                    <td className="p-0.5 font-bold bg-[#8BAAD0]/30 text-right dir-rtl">عدل</td>
                   </tr>
                   <tr>
-                    <td className="p-1 border-r border-slate-200 font-garamond font-bold text-slate-700">FLUENT</td>
-                    <td className="p-1 border-r border-slate-200 font-bold text-[rgb(0,0,128)]">{languages.english === 'Fluent' || languages.english === 'Basic' ? '✓' : ''}</td>
-                    <td className="p-1 border-r border-slate-200 font-garamond font-bold text-slate-700">FLUENT</td>
-                    <td className="p-1 font-bold text-[rgb(0,0,128)]">{languages.arabic === 'Fluent' || languages.arabic === 'Basic' ? '✓' : ''}</td>
+                    <td className="p-0.5 font-bold bg-[#8BAAD0]/30 text-left">FLUENT</td>
+                    <td className="p-0.5 border-r border-[#000080]">{getLanguageCheck(formData.languages?.english, 'fluent') ? checkMark : ''}</td>
+                    <td className="p-0.5">{getLanguageCheck(formData.languages?.arabic, 'fluent') ? checkMark : checkMark}</td>
+                    <td className="p-0.5 font-bold bg-[#8BAAD0]/30 text-right dir-rtl">طليق</td>
                   </tr>
                 </tbody>
               </table>
+
+              {/* PREVIOUS EXPERIENCE Table */}
+              <table className="w-full text-[10px] border-collapse border border-[#000080] font-sans">
+                <thead>
+                  <tr className="bg-[#8BAAD0] text-[#000080] font-black">
+                    <th colSpan={3} className="p-0.5 text-left flex justify-between">
+                      <span>PREVIOUS EXPERIENCE</span>
+                      <span dir="rtl">الخبرة السابقة</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#000080]">
+                  <tr>
+                    <td className="p-0.5 font-bold bg-[#8BAAD0]/30 w-1/3">COUNTRY</td>
+                    <td className="p-0.5 font-black text-center">{formData.previousExperiences?.[0]?.country || ''}</td>
+                    <td className="p-0.5 text-right font-bold dir-rtl bg-[#8BAAD0]/30 w-1/4">دولة</td>
+                  </tr>
+                  <tr>
+                    <td className="p-0.5 font-bold bg-[#8BAAD0]/30">PERIOD</td>
+                    <td className="p-0.5 font-black text-center">{formData.previousExperiences?.[0]?.period || ''}</td>
+                    <td className="p-0.5 text-right font-bold dir-rtl bg-[#8BAAD0]/30">المدة</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              {/* SKILLS Table Grid */}
+              <div className="border border-[#000080] font-sans text-[10px]">
+                <div className="bg-[#8BAAD0] text-[#000080] font-black p-0.5 flex justify-between border-b border-[#000080]">
+                  <span>SKILLS</span>
+                  <span dir="rtl">المهارات</span>
+                </div>
+
+                <div className="grid grid-cols-3 divide-x divide-y divide-[#000080]">
+                  {[
+                    { key: 'babySitting', en: 'Baby Sitting', ar: 'جلوس الطفل' },
+                    { key: 'washing', en: 'Washing', ar: 'غسل' },
+                    { key: 'cleaning', en: 'Cleaning', ar: 'تنظيف' },
+                    { key: 'cooking', en: 'Cooking', ar: 'طبخ' },
+                    { key: 'sewing', en: 'Sewing', ar: 'خياطة' },
+                    { key: 'driving', en: 'Driving', ar: 'القيادة' },
+                  ].map((s) => {
+                    const isChecked = Boolean(formData.skills?.[s.key as keyof typeof formData.skills]);
+                    return (
+                      <div key={s.key} className="p-1 flex items-center justify-between bg-white">
+                        <div className="flex flex-col">
+                          <span dir="rtl" className="text-[9px] font-bold text-[#000080]">{s.ar}</span>
+                          <span className="font-bold">{s.en}</span>
+                        </div>
+                        <div className="w-4 h-4 border border-[#000080] flex items-center justify-center font-bold text-[#000080]">
+                          {isChecked ? checkMark : ''}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
 
-            {/* Previous Experience */}
-            <div className="border border-[rgb(0,0,128)] rounded-xs overflow-hidden text-xs shadow-2xs">
-              <div className="bg-[#8BBDFA]/40 text-[rgb(0,0,128)] px-2.5 py-1 font-bold flex justify-between items-center border-b border-[rgb(0,0,128)]">
-                <span className="font-garamond text-sm uppercase tracking-wider">PREVIOUS EXPERIENCE</span>
-                <span className="cv-font-arabic text-xs">الخبرة السابقة</span>
-              </div>
-              <div className="grid grid-cols-2 bg-[#8BBDFA]/30 font-bold border-b border-[rgb(0,0,128)] p-1 text-center text-[rgb(0,0,128)]">
-                <span className="font-garamond">COUNTRY / <span className="cv-font-arabic">دولة</span></span>
-                <span className="font-garamond">PERIOD / <span className="cv-font-arabic">المدة</span></span>
-              </div>
-              <div className="bg-white p-1.5 text-center font-semibold">
-                {experiences.length > 0 ? (
-                  experiences.map((exp: any, i: number) => (
-                    <div key={i} className="grid grid-cols-2 border-b last:border-b-0 border-slate-200 py-0.5">
-                      <span className="font-garamond text-slate-800">{exp.country}</span>
-                      <span className="font-garamond text-slate-800">{exp.period || `${exp.years || 0} Yrs`}</span>
-                    </div>
-                  ))
-                ) : (
-                  <span className="text-slate-400 italic font-garamond">No experience recorded</span>
-                )}
-              </div>
-            </div>
-
-            {/* Skills */}
-            <div className="border border-[rgb(0,0,128)] rounded-xs overflow-hidden text-xs shadow-2xs">
-              <div className="bg-[#8BBDFA]/40 text-[rgb(0,0,128)] px-2.5 py-1 font-bold flex justify-between items-center border-b border-[rgb(0,0,128)]">
-                <span className="font-garamond text-sm uppercase tracking-wider">SKILLS</span>
-                <span className="cv-font-arabic text-xs">المهارات</span>
-              </div>
-              <div className="grid grid-cols-3 gap-1.5 p-2 bg-white text-[11px]">
-                <SkillBox en="Baby Sitting" ar="جلوس الطفل" active={skills.babySitting} />
-                <SkillBox en="Washing" ar="غسل" active={skills.washing} />
-                <SkillBox en="Cleaning" ar="تنظيف" active={skills.cleaning} />
-                <SkillBox en="Cooking" ar="طبخ" active={skills.cooking} />
-                <SkillBox en="Sewing" ar="خياطة" active={skills.sewing} />
-                <SkillBox en="Driving" ar="القيادة" active={skills.driving} />
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column */}
-          <div className="col-span-5 space-y-2">
-            {/* Passport Details */}
-            <div className="border border-[rgb(0,0,128)] rounded-xs overflow-hidden text-xs shadow-2xs">
-              <div className="bg-[#8BBDFA]/40 text-[rgb(0,0,128)] px-2.5 py-1 font-bold flex justify-between items-center border-b border-[rgb(0,0,128)]">
-                <span className="font-garamond text-sm uppercase tracking-wider">PASSPORT DETAILS</span>
-                <span className="cv-font-arabic text-xs">تفاصيل جواز السفر</span>
-              </div>
-              <div className="divide-y divide-slate-200 bg-white">
-                <Row en="NUMBER" ar="رقم" val={formData.passportNumber} />
-                <Row en="DATE OF ISSUE" ar="تاريخ الإصدار" val={formData.passportDateOfIssue} />
-                <Row en="PLACE OF ISSUE" ar="مكان الإصدار" val={formData.passportPlaceOfIssue} />
-                <Row en="DATE OF EXP" ar="تاريخ الانتهاء" val={formData.passportDateOfExpiry} />
-              </div>
-            </div>
-
-            {/* Full Photo Frame */}
-            <div className="border-2 border-[rgb(0,0,128)] rounded-xs bg-slate-50 h-[108mm] flex flex-col items-center justify-center overflow-hidden relative p-1 shadow-2xs">
+            {/* Right Column: Full Photo (5.35" x 3.54") */}
+            <div className="col-span-1 border-2 border-[#000080] h-[480px] flex flex-col items-center justify-center p-1 bg-white">
               {formData.fullBodyPhoto ? (
-                <img src={formData.fullBodyPhoto} alt="Full Photo" className="w-full h-full object-cover" />
+                <img src={formData.fullBodyPhoto} alt="Full Body" className="max-h-full max-w-full object-contain" />
               ) : (
-                <div className="text-center text-slate-400 p-2">
-                  <ImageIcon className="w-8 h-8 mx-auto mb-1 text-slate-300" />
-                  <p className="text-xs font-bold font-garamond uppercase text-slate-600">Full photo</p>
-                  <p className="text-[10px] text-slate-500">5.35" x 3.54"</p>
+                <div className="text-center text-slate-500 text-[10px] font-bold font-sans">
+                  Full photo<br />5.35" x 3.54"
                 </div>
               )}
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  );
-}
 
-function CVPage2({ formData }: { formData: any }) {
-  return (
-    <div id="darein-page-2" className="cv-page-container flex flex-col justify-between shadow-2xl">
-      <div>
-        <div className="p-3.5 border-b-2 border-[rgb(0,0,128)] flex justify-between items-center bg-white">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 flex items-center justify-center shrink-0">
-              <img 
-                src={dareinLogoImg} 
-                alt="Darein Est Logo" 
-                className="max-h-10 max-w-10 object-contain"
-                onError={(e) => {
-                  (e.target as HTMLElement).style.display = 'none';
-                }}
-              />
-            </div>
-            <div>
-              <h1 className="text-lg font-black font-garamond text-[rgb(0,0,128)] uppercase tracking-wider">DAREIN EST</h1>
-              <span className="bg-[rgb(0,0,128)] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-xs font-garamond uppercase">
-                FOR RECRUITMENT OF DOMESTIC MANPOWER
-              </span>
-            </div>
-          </div>
-
-          <div className="flex gap-4 text-xs font-semibold border border-[rgb(0,0,128)] p-1.5 bg-slate-50 rounded-xs">
-            <div className="flex gap-1"><span className="text-[rgb(0,0,128)] font-bold font-garamond">Date:</span> <span className="font-mono">{formData.date || '---'}</span></div>
-            <div className="flex gap-1 border-l border-slate-300 pl-2"><span className="text-[rgb(0,0,128)] font-bold font-garamond">Serial No:</span> <span className="font-mono">{formData.refNo || '---'}</span></div>
-          </div>
+        {/* Footer Bar with Date & Serial No */}
+        <div className="border-t-2 border-[#000080] pt-1 mt-2 flex items-center justify-between text-[10px] font-bold text-[#000080] font-sans">
+          <span>DAREIN EST FOR RECRUITMENT</span>
+          <span>DATE: {formData.date || '2026-10-16'} │ SERIAL NO: {formData.refNo || 'DAREIN-2026-0892'}</span>
+          <span>PAGE 1 OF 2</span>
         </div>
+      </div>
 
-        <div className="p-6 space-y-5">
-          <div className="bg-[#8BBDFA]/40 text-[rgb(0,0,128)] border border-[rgb(0,0,128)] text-center py-2 font-bold font-garamond text-base tracking-wider uppercase rounded-xs">
-            PASSPORT COPY ATTACHMENT
+      {/* PAGE 2: PASSPORT COPY & MEDICAL REPORT ATTACHMENTS */}
+      <div className="darein-page cv-page-container w-[210mm] min-h-[296mm] max-h-[296mm] p-5 bg-white border-4 border-[#000080] shadow-md print:shadow-none flex flex-col justify-between box-sizing-border overflow-hidden font-sans">
+        <div>
+          {/* Header Page 2 */}
+          <div className="border-b-2 border-[#000080] pb-2 mb-3 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <img src={logoImg} alt="Darein Logo" className="h-10 object-contain" />
+              <div>
+                <h2 className="text-base font-black text-[#000080] font-serif">DAREIN EST FOR RECRUITMENT</h2>
+                <p className="text-[10px] font-bold text-slate-600">CANDIDATE DOCUMENT ATTACHMENTS</p>
+              </div>
+            </div>
+            <div className="text-right text-xs font-bold text-[#000080]">
+              <div>NAME: {formData.fullName || 'LULA MESFEN GOSHU'}</div>
+              <div>PASSPORT NO: {formData.passportNumber || 'EQ454545'}</div>
+            </div>
           </div>
 
-          <div className="w-full border-2 border-[rgb(0,0,128)] h-[162mm] bg-slate-50 flex items-center justify-center relative overflow-hidden p-2 rounded-xs shadow-2xs">
+          {/* Passport Scan */}
+          <div className="border-2 border-dashed border-[#000080] rounded-lg p-2 flex flex-col items-center justify-center bg-slate-50 mb-3 h-[120mm] overflow-hidden">
+            <h4 className="text-xs font-black text-[#000080] uppercase mb-2">PASSPORT COPY ATTACHMENT / مرفق صورة جواز السفر</h4>
             {formData.passportScan ? (
-              <img src={formData.passportScan} alt="Passport Attachment" className="w-full h-full object-contain" />
+              <img src={formData.passportScan} alt="Passport Scan" className="max-h-[90%] max-w-full object-contain rounded border border-slate-300 shadow-xs" />
             ) : (
-              <div className="text-center text-slate-400 p-4">
-                <FileText className="w-12 h-12 mx-auto mb-2 text-slate-300" />
-                <p className="text-sm font-bold font-garamond uppercase text-slate-600">Passport</p>
-                <p className="text-xs text-slate-500">3.54" x 5.18"</p>
-              </div>
+              <div className="text-slate-400 text-xs font-bold">NO PASSPORT SCAN ATTACHED</div>
+            )}
+          </div>
+
+          {/* Medical Fitness Scan */}
+          <div className="border-2 border-dashed border-[#000080] rounded-lg p-2 flex flex-col items-center justify-center bg-slate-50 h-[120mm] overflow-hidden">
+            <h4 className="text-xs font-black text-[#000080] uppercase mb-2">MEDICAL FITNESS REPORT / تقرير اللياقة الطبية</h4>
+            {formData.medicalScan ? (
+              <img src={formData.medicalScan} alt="Medical Scan" className="max-h-[90%] max-w-full object-contain rounded border border-slate-300 shadow-xs" />
+            ) : (
+              <div className="text-slate-400 text-xs font-bold">NO MEDICAL REPORT ATTACHED</div>
             )}
           </div>
         </div>
-      </div>
 
-      <div className="bg-[rgb(0,0,128)] text-white px-4 py-2 flex justify-between items-center text-xs font-semibold">
-        <span className="font-garamond tracking-wide">DAREIN EST - Application for Employment</span>
-        <span className="font-garamond">Page 2</span>
-      </div>
-    </div>
-  );
-}
-
-function Row({ en, ar, val }: { en: string; ar: string; val?: string }) {
-  return (
-    <div className="grid grid-cols-12 p-1.5 items-center">
-      <span className="col-span-5 font-bold font-garamond text-slate-800 text-[12px]">{en}</span>
-      <span className="col-span-4 font-bold font-garamond text-[rgb(0,0,128)] text-center text-[12.5px]">{val || '-'}</span>
-      <span className="col-span-3 cv-font-arabic text-left font-semibold text-slate-600 text-[11px]">{ar}</span>
-    </div>
-  );
-}
-
-function SkillBox({ en, ar, active }: { en: string; ar: string; active?: boolean }) {
-  return (
-    <div className={`border border-[rgb(0,0,128)] p-1 rounded-xs flex items-center justify-between ${active ? 'bg-[#8BBDFA]/30 font-bold' : 'bg-white'}`}>
-      <div>
-        <div className="cv-font-arabic text-[10px] text-slate-700">{ar}</div>
-        <div className="text-[10.5px] font-garamond text-[rgb(0,0,128)] font-bold">{en}</div>
-      </div>
-      <div className="w-4 h-4 border border-[rgb(0,0,128)] flex items-center justify-center text-xs font-bold bg-white text-[rgb(0,0,128)]">
-        {active ? '✓' : ''}
+        {/* Footer Page 2 */}
+        <div className="border-t-2 border-[#000080] pt-1 mt-2 flex items-center justify-between text-[10px] font-bold text-[#000080]">
+          <span>DAREIN EST FOR RECRUITMENT</span>
+          <span>DATE: {formData.date || '2026-10-16'} │ SERIAL NO: {formData.refNo || 'DAREIN-2026-0892'}</span>
+          <span>PAGE 2 OF 2</span>
+        </div>
       </div>
     </div>
   );
