@@ -1,5 +1,4 @@
-﻿import React from 'react';
-import { FileText, ShieldCheck, CheckCircle, User, Image as ImageIcon } from 'lucide-react';
+﻿import { FileText, CheckCircle, User, Image as ImageIcon } from 'lucide-react';
 import type { CVFormData } from "../context/CVFormContext";
 import logoImg from "../assets/andelus_logo.png";
 
@@ -14,7 +13,7 @@ const OFFICE_TITLES: Record<string, { en: string; ar: string }> = {
 };
 
 export function AlAndalusHtmlTemplate({ formData }: Props) {
-  const officeInfo = OFFICE_TITLES[formData.selectedPartner] || OFFICE_TITLES.al_andalus;
+  const officeInfo = OFFICE_TITLES[formData.selectedPartner || 'al_andalus'] || OFFICE_TITLES.al_andalus;
 
   return (
     <div className="flex flex-col items-center text-slate-900 bg-white font-sans">

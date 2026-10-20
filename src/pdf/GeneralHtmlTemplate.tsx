@@ -1,5 +1,4 @@
-﻿import React from 'react';
-import { FileText, ShieldCheck, CheckCircle, User, Image as ImageIcon } from 'lucide-react';
+﻿import { FileText, Image as ImageIcon } from 'lucide-react';
 import type { CVFormData } from "../context/CVFormContext";
 
 interface Props {
@@ -130,7 +129,7 @@ function CVPage1({ formData }: { formData: any }) {
                 <Row en="Place of Birth" ar="مكان الميلاد" val={formData.placeOfBirth} />
                 <Row en="Date of Birth" ar="تاريخ الميلاد" val={formData.dateOfBirth} />
                 <Row en="Age" ar="العمر" val={formData.age ? `${formData.age} Yrs` : ''} />
-                <Row en="Living Town" ar="مكان السكن" val={formData.livingTown || formData.placeOfBirth} />
+                <Row en="Living Town" ar="مكان السكن" val={formData.placeOfBirth} />
                 <Row en="Marital Status" ar="الحالة الاجتماعية" val={formData.maritalStatus} />
                 <Row en="No. of Children" ar="عدد الاطفال" val={formData.numberOfChildren} />
                 <Row en="Phone No." ar="رقم جوال" val={formData.phoneNo} />

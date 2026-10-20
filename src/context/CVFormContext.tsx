@@ -99,7 +99,7 @@ export const CVFormProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     if (saved) {
       try {
         return JSON.parse(saved);
-      } catch (e) {
+      } catch {
         return defaultCVFormData;
       }
     }

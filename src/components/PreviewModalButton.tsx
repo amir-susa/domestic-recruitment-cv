@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+﻿import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Eye, Building2, Download, X, Printer } from 'lucide-react';
 import type { CVFormData } from "../context/CVFormContext";
@@ -18,7 +18,7 @@ const PARTNERS = [
   { id: 'general_purpose', name: 'General Agency (Tesnim)', arName: 'وكالة تسنيم - عام', badge: 'All Countries' },
 ];
 
-export function PreviewModalButton({ formData, onGeneratePdf, isGenerateOnly = false }: Props) {
+export function PreviewModalButton({ formData, isGenerateOnly = false }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [activePartner, setActivePartner] = useState<string>(formData.selectedPartner || 'al_andalus');
 

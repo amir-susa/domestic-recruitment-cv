@@ -1,8 +1,8 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { CVFormContext, defaultCVFormData, type CVFormData } from './context/CVFormContext';
 import { PreviewModalButton } from './components/PreviewModalButton';
 import { 
-  RefreshCw, Sparkles, User, FileText, Globe, Award, Briefcase, 
+  User, FileText, Globe, Award, Briefcase, 
   Upload, Trash2, PlusCircle, Layers, ShieldAlert, AlertCircle, 
   ArrowRightLeft, Check, Maximize2, X 
 } from 'lucide-react';
@@ -24,7 +24,7 @@ export default function App() {
   const [formData, setFormData] = useState<CVFormData>(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
-      try { return JSON.parse(saved); } catch (e) { return defaultCVFormData; }
+      try { return JSON.parse(saved); } catch { return defaultCVFormData; }
     }
     return defaultCVFormData;
   });
@@ -213,7 +213,7 @@ export default function App() {
   const passportStatus = getPassportValidityStatus();
 
   return (
-    <CVFormContext.Provider value={{ formData, setFormData }}>
+      <CVFormContext.Provider value={{ formData, setFormData, resetForm: handleReset }}>
       <div className="min-h-screen bg-[#F1F5F9] text-[#1E293B] flex flex-col font-sans">
         <header className="bg-white border-b border-[#CBD5E1] px-8 py-5 flex items-center justify-between sticky top-0 z-30 shadow-xs">
           <div className="flex items-center gap-3">

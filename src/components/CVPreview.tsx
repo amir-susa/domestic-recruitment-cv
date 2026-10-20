@@ -1,5 +1,4 @@
-﻿import React from 'react';
-import type { CVFormData } from "../context/CVFormContext";
+﻿import type { CVFormData } from "../context/CVFormContext";
 import { AlAndalusHtmlTemplate } from "../pdf/AlAndalusHtmlTemplate";
 import { DareinHtmlTemplate } from "../pdf/DareinHtmlTemplate";
 import { GeneralHtmlTemplate } from "../pdf/GeneralHtmlTemplate";
