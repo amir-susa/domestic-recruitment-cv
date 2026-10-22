@@ -1,4 +1,5 @@
-﻿import { useState, useEffect } from 'react';
+﻿import goldLogoImg from './assets/Tesnim CV Studio Gold Logo.png';
+import { useState, useEffect } from 'react';
 import { CVFormContext, defaultCVFormData, type CVFormData } from './context/CVFormContext';
 import { PreviewModalButton } from './components/PreviewModalButton';
 import { 
@@ -215,32 +216,39 @@ export default function App() {
   return (
       <CVFormContext.Provider value={{ formData, setFormData, resetForm: handleReset }}>
       <div className="min-h-screen bg-[#F1F5F9] text-[#1E293B] flex flex-col font-sans">
-        <header className="bg-white border-b border-[#CBD5E1] px-8 py-5 flex items-center justify-between sticky top-0 z-30 shadow-xs">
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#0F2A5C] to-[#0E8F86] flex items-center justify-center font-black text-white text-2xl shadow-xs">
-              CV
-            </div>
-            <div>
-              <h1 className="font-semibold text-2xl text-[#0F2A5C] tracking-tight">Magic CV Generator</h1>
-              <p className="text-xs text-[#475569] font-medium">Tesnim Foreign Employment Agency</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 bg-[#F1F5F9] p-2 rounded-xl border border-[#CBD5E1]">
-              <label className="text-xs font-semibold text-[#475569] pl-1">Primary Agency:</label>
-              <select
-                value={formData.selectedPartner}
-                onChange={(e) => setFormData({ ...formData, selectedPartner: e.target.value })}
-                className="bg-white text-[#1E293B] font-medium text-xs rounded-lg px-3.5 py-2 border border-[#CBD5E1] focus:outline-none focus:ring-2 focus:ring-[#0E8F86]"
-              >
-                <option value="al_andalus">Al-Andalus (KSA / GCC)</option>
-                <option value="darein">Darein Est (Kuwait)</option>
-                <option value="general_purpose">General Agency (Tesnim)</option>
-              </select>
-            </div>
-          </div>
-        </header>
+        <header className="bg-[#08265F] border-b-4 border-[#0BBF93] shadow-2xl py-5 px-6 sm:px-10 flex items-center justify-between text-white">
+      <div className="flex items-center gap-4">
+        <div className="p-2 bg-slate-900/60 rounded-xl border-2 border-[#0BBF93]/60 shadow-lg flex items-center justify-center backdrop-blur-sm">
+          <img 
+            src={goldLogoImg} 
+            alt="Tesnim CV Studio Gold Logo" 
+            className="h-16 w-auto object-contain drop-shadow-md" 
+          />
+        </div>
+        <div className="flex flex-col text-left">
+          <h1 className="text-2xl sm:text-3xl font-black tracking-wide text-white drop-shadow-sm">
+            Tesnim CV Studio
+          </h1>
+          <p className="text-sm sm:text-base font-bold text-[#0BBF93] tracking-wide mt-0.5">
+            Tesnim Foreign Employment Agency
+          </p>
+        </div>
+      </div>
+      
+      {/* Right side agency selector / controls */}
+      <div className="flex items-center gap-3 bg-slate-900/40 px-4 py-2 rounded-lg border border-slate-700/60 shadow-inner">
+        <span className="text-xs sm:text-sm font-semibold text-slate-300">Primary Agency:</span>
+        <select 
+          value={formData.selectedPartner || 'darein'} 
+          onChange={(e) => updateFormData({ selectedPartner: e.target.value as any })}
+          className="bg-slate-800 text-white font-medium text-xs sm:text-sm px-3 py-1.5 rounded border border-slate-600 focus:outline-none focus:ring-2 focus:ring-[#0BBF93]"
+        >
+          <option value="darein">Darein Est (Kuwait)</option>
+          <option value="al_andalus">Al-Andalus (Kuwait)</option>
+          <option value="general_purpose">General Recruitment</option>
+        </select>
+      </div>
+    </header>
 
         <main className="flex-1 max-w-[1160px] w-full mx-auto p-6 md:p-8 space-y-8">
           {draftRestoredNotice && (
@@ -573,7 +581,7 @@ export default function App() {
 
             {/* Section 4: Previous Work Experience */}
             <div className="bg-white border border-[#CBD5E1] rounded-[12px] p-6 shadow-xs space-y-5">
-              <div className="flex items-center justify-between border-b border-[#F1F5F9] pb-4 text-[#0F2A5C] font-semibold text-[17px]">
+              <div className="flex items-center justify-between py-5 px-8 border-b border-[#F1F5F9] pb-4 text-[#0F2A5C] font-semibold text-[17px]">
                 <div className="flex items-center gap-2.5">
                   <Briefcase className="w-6 h-6 text-[#0E8F86]" />
                   <span>4. Work Experience (Arab / GCC)</span>
@@ -645,7 +653,7 @@ export default function App() {
 
           {/* Section 5: Image & Document Attachments */}
           <div className="bg-white border border-[#CBD5E1] rounded-[12px] p-6 shadow-xs space-y-5">
-            <div className="flex items-center justify-between border-b border-[#F1F5F9] pb-4 text-[#0F2A5C] font-semibold text-[17px]">
+            <div className="flex items-center justify-between py-5 px-8 border-b border-[#F1F5F9] pb-4 text-[#0F2A5C] font-semibold text-[17px]">
               <div className="flex items-center gap-2.5">
                 <Upload className="w-6 h-6 text-[#0E8F86]" />
                 <span>5. Image & Document Attachments</span>
@@ -788,7 +796,7 @@ export default function App() {
         </main>
 
         <footer className="bg-white border-t border-[#CBD5E1] py-8 text-center text-xs text-[#475569] space-y-1.5 mt-8">
-          <p className="font-semibold text-sm text-[#0F2A5C]">Tesnim Foreign Employment Agency • Magic CV Generator</p>
+          <p className="font-semibold text-sm text-[#0F2A5C]">Tesnim Foreign Employment Agency • Tesnim CV Studio</p>
           <p className="font-medium">Contact: +251 908 282828 / +251 111 280000 │ Email: tesnimagency2828@gmail.com</p>
         </footer>
 

@@ -49,12 +49,15 @@ export interface DareinCvData {
 }
 
 export interface DareinHtmlTemplateProps {
+  /** Existing standalone data API; kept for backward compatibility. */
   data?: Partial<Omit<DareinCvData, "passport" | "languages" | "experience" | "skills">> & {
     passport?: Partial<DareinCvData["passport"]>;
     languages?: Partial<DareinCvData["languages"]>;
     experience?: Partial<DareinCvData["experience"]>;
     skills?: Partial<DareinCvData["skills"]>;
   };
+  /** Form state from the same CV form used by AlAndalusHtmlTemplate. */
+  formData?: any;
   className?: string;
   /** Logo image URL. Defaults to DEFAULT_LOGO_SRC (your assets folder). */
   logoSrc?: string;
@@ -220,13 +223,13 @@ const CSS = `
   flex: none;
   height: 31mm;
   display: grid;
-  grid-template-columns: 1fr 28mm 1fr;
+  grid-template-columns: minmax(0, 1fr) 30mm minmax(0, 1fr);
   align-items: center;
   padding: 0 3mm;
   border-bottom: 0.5mm solid var(--navy);
   background: #fff;
 }
-.drn-brand { display: flex; flex-direction: column; gap: 2.2mm; }
+.drn-brand { min-width: 0; display: flex; flex-direction: column; gap: 2.2mm; }
 .drn-brand-ar { align-items: flex-end; }
 .drn-title { margin: 0 0 0 2mm; font-size: 24pt; font-weight: 700; letter-spacing: 0.02em; line-height: 1; }
 .drn-title-ar { margin: 0 2mm 0 0; font-size: 22pt; line-height: 1.1; }
@@ -235,9 +238,9 @@ const CSS = `
   height: 9mm; border-radius: 2.2mm;
   background: var(--navy); color: #fff; font-weight: 700;
 }
-.drn-pill-en { width: 88mm; justify-content: flex-start; padding: 0 4mm; font-size: 8.4pt; font-weight: 700; letter-spacing: 0.02em; }
-.drn-pill-ar { width: 70mm; justify-content: flex-start; padding: 0 4mm; font-size: 12pt; font-weight: 700; } /* rtl: flex-start = right edge */
-.drn-logo { justify-self: center; display: block; width: 25mm; height: 25mm; object-fit: contain; }
+.drn-pill-en { width: 100%; max-width: 100%; min-width: 0; justify-content: center; padding: 0 1.5mm; font-size: 7.2pt; white-space: nowrap; font-weight: 700; letter-spacing: 0.01em; }
+.drn-pill-ar { width: 100%; max-width: 100%; min-width: 0; justify-content: center; padding: 0 1.5mm; font-size: 10.5pt; white-space: nowrap; font-weight: 700; }
+.drn-logo { grid-column: 2; justify-self: center; align-self: center; display: block; width: 25mm; height: 25mm; object-fit: contain; margin-inline: auto; }
 
 /* ---- Footer (shared) ---- */
 .drn-footer {
@@ -263,7 +266,7 @@ const CSS = `
   display: flex; flex-direction: column; justify-content: center; gap: 1.2mm;
   background: var(--navy); color: #fff; text-align: center;
 }
-.drn-address-ar { font-size: 12.5pt; font-weight: 900; -webkit-text-stroke: 0.25pt currentColor; white-space: nowrap; }
+.drn-address-ar { font-family: Arial, "Arial Unicode MS", sans-serif !important; font-family: Arial !important; mso-bidi-font-family: Arial; mso-ascii-font-family: Arial; mso-hansi-font-family: Arial; font-size: 12.5pt; font-weight: 900; -webkit-text-stroke: 0.25pt currentColor; white-space: nowrap; }
 .drn-address-en { font-size: 11pt; font-weight: 700; -webkit-text-stroke: 0.15pt currentColor; letter-spacing: 0; white-space: nowrap; }
 .drn-contact { display: flex; align-items: center; justify-content: center; gap: 2.4mm; font-size: 14pt; font-weight: 700; }
 .drn-contact .drn-ar { font-size: 13.5pt; font-weight: 700; }
@@ -297,7 +300,7 @@ const CSS = `
 /* ---- Page 1: lower block ---- */
 .drn-main {
   flex: 1; min-height: 0; display: grid;
-  grid-template-columns: 106mm 1fr; column-gap: 3.5mm;
+  grid-template-columns: 103mm minmax(0, 1fr); column-gap: 3.5mm;
   padding: 2mm 0 3mm 3mm;
 }
 .drn-col-left { display: flex; flex-direction: column; justify-content: space-between; min-height: 0; }
@@ -347,6 +350,9 @@ const CSS = `
   background: var(--navy); color: #fff; font-size: 8.5pt; letter-spacing: 0.02em;
 }
 .drn-attach-bar .drn-ar { font-size: 8pt; font-weight: 400; }
+.drn-passport-section { width: 93mm; max-width: 100%; }
+.drn-passport-section .drn-sec { width: 100%; }
+.drn-passport-section .drn-passport { width: 100%; }
 .drn-passport-box { width: 131.6mm; height: 90mm; margin: 0 auto; }
 `;
 
@@ -414,17 +420,86 @@ const SectionHead = ({ en, ar }: { en: string; ar: string }) => (
 
 export function DareinHtmlTemplate({
   data,
+  formData,
   className,
   logoSrc = DEFAULT_LOGO_SRC,
   phoneIconSrc = DEFAULT_PHONE_ICON_SRC,
 }: DareinHtmlTemplateProps) {
+  /*
+   * Prefer formData when supplied so this template can be driven directly by
+   * the same live form state as AlAndalusHtmlTemplate. The original `data`
+   * prop remains supported for existing callers.
+   */
+  const source = formData ?? {};
+  const firstExperience = Array.isArray(source.previousExperiences)
+    ? source.previousExperiences[0]
+    : undefined;
+  const languageLevel = (value: unknown): Level => {
+    const level = String(value ?? "").trim().toLowerCase();
+    if (level === "poor" || level === "basic") return "poor";
+    if (level === "fair" || level === "intermediate") return "fair";
+    if (level === "fluent" || level === "advanced") return "fluent";
+    return null;
+  };
+  const mappedFormData: Partial<DareinCvData> = formData
+    ? {
+        fullName: source.fullName ?? "",
+        nationality: source.nationality,
+        religion: source.religion,
+        dateOfBirth: source.dateOfBirth,
+        age: source.age,
+        placeOfBirth: source.placeOfBirth,
+        maritalStatus: source.maritalStatus,
+        children: source.numberOfChildren ?? source.children,
+        weight: source.weight,
+        height: source.height,
+        education: source.educationalQualification ?? source.education,
+        passport: {
+          number: source.passportNumber ?? source.passport?.number,
+          issueDate: source.passportDateOfIssue ?? source.passport?.issueDate,
+          issuePlace: source.passportPlaceOfIssue ?? source.passport?.issuePlace,
+          expiryDate: source.passportDateOfExpiry ?? source.passport?.expiryDate,
+        },
+        languages: {
+          english: languageLevel(source.languages?.english),
+          arabic: languageLevel(source.languages?.arabic),
+        },
+        experience: {
+          country: firstExperience?.country ?? source.experience?.country ?? "",
+          period: firstExperience?.period
+            ?? (firstExperience
+              ? [firstExperience.years, firstExperience.months]
+                  .filter((part) => part !== undefined && part !== null && String(part) !== "" && String(part) !== "0")
+                  .join(" ")
+              : source.experience?.period ?? ""),
+        },
+        skills: {
+          babySitting: source.skills?.babySitting ?? source.skills?.babysitting ?? defaultDareinData.skills.babySitting,
+          washing: source.skills?.washing ?? defaultDareinData.skills.washing,
+          cleaning: source.skills?.cleaning ?? defaultDareinData.skills.cleaning,
+          cooking: source.skills?.cooking ?? defaultDareinData.skills.cooking,
+          sewing: source.skills?.sewing ?? false,
+          driving: source.skills?.driving ?? false,
+        },
+        date: source.date,
+        refNo: source.refNo,
+        applicantPhotoUrl: source.headshotPhoto ?? source.applicantPhotoUrl,
+        fullPhotoUrl: source.fullBodyPhoto ?? source.fullPhotoUrl,
+        passportCopyUrl: source.passportScan ?? source.passportCopyUrl,
+        contactName: source.contactName ?? defaultDareinData.contactName,
+        contactNameAr: source.contactNameAr ?? defaultDareinData.contactNameAr,
+        contactPhone: source.contactPhone ?? defaultDareinData.contactPhone,
+      }
+    : {};
+
   const d: DareinCvData = {
     ...defaultDareinData,
+    ...mappedFormData,
     ...data,
-    passport: { ...defaultDareinData.passport, ...data?.passport },
-    languages: { ...defaultDareinData.languages, ...data?.languages },
-    experience: { ...defaultDareinData.experience, ...data?.experience },
-    skills: { ...defaultDareinData.skills, ...data?.skills },
+    passport: { ...defaultDareinData.passport, ...mappedFormData.passport, ...data?.passport },
+    languages: { ...defaultDareinData.languages, ...mappedFormData.languages, ...data?.languages },
+    experience: { ...defaultDareinData.experience, ...mappedFormData.experience, ...data?.experience },
+    skills: { ...defaultDareinData.skills, ...mappedFormData.skills, ...data?.skills },
   };
 
   const detailCols = "34fr 38fr 34fr";
@@ -548,7 +623,7 @@ export function DareinHtmlTemplate({
 
             {/* ---------- right column ---------- */}
             <div className="drn-col-right">
-              <div style={{ width: "84mm" }}>
+              <div className="drn-passport-section">
                 <div className="drn-sec">
                   <span className="drn-sec-en">PASSPORT DETAILS</span>
                   <span className="drn-ar drn-sec-ar" lang="ar">تفاصيل جواز السفر</span>

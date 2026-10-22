@@ -1,17 +1,22 @@
+﻿import React from "react";
+import goldLogoImg from "../assets/Tesnim CV Studio Gold Logo.png";
 
-import logo from "../assets/logo.png";
-
-type BrandLogoProps = {size?: "lg" | "sm";};
-
-export function BrandLogo({ size = "lg" }: BrandLogoProps) {
-  const isLg = size === "lg";
+export function BrandLogo() {
   return (
-    <div
-      aria-hidden="true"
-      className={`flex shrink-0 items-center justify-center ${
-      isLg ? "h-[96px] w-[96px]" : "h-[66px] w-[66px]"}`
-      }>
-      <img src={logo} alt="" className="h-[85%] w-[85%] object-contain" />
-    </div>);
-
+    <div className="flex items-center gap-3">
+      <img
+        src={goldLogoImg}
+        alt="Tesnim CV Studio Logo"
+        className="h-11 w-auto object-contain"
+      />
+      <div className="flex flex-col text-left">
+        <h1 className="text-xl font-bold tracking-tight text-slate-900">
+          Tesnim CV Studio
+        </h1>
+        <p className="text-xs font-medium text-slate-500">
+          Tesnim Foreign Employment Agency
+        </p>
+      </div>
+    </div>
+  );
 }

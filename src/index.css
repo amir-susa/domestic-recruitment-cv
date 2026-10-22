@@ -1,4 +1,4 @@
-@tailwind base;
+﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -18,7 +18,7 @@
   text-rendering: optimizeLegibility;
 }
 
-* {
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
@@ -84,8 +84,6 @@ img {
   max-width: 100%;
 }
 
-
-
 main[data-preview="true"] [data-cv-page] {
   pointer-events: none;
 }
@@ -96,14 +94,15 @@ main[data-preview="true"] .cv-editor-control {
 
 @media print {
   @page {
-    size: 952px 1233px;
+    size: 210mm 297mm;
     margin: 0;
   }
 
   html,
   body,
   #root {
-    width: 952px;
+    width: 210mm;
+    height: 297mm;
     min-width: 0;
     margin: 0;
     background: #fff;
