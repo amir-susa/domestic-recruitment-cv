@@ -118,16 +118,21 @@ function AgencyHeader({ officeInfo }: { officeInfo: { en: string; ar: string } }
   );
 }
 
-function ReferenceSubBar({ refNo, date }: { refNo?: string; date?: string }) {
+function ReferenceSubBar({ refNo, date, passportNumber }: { refNo?: string; date?: string; passportNumber?: string }) {
+  const cleanPassport = (passportNumber || '').replace(/[^a-zA-Z0-9]/g, '');
+  const autoDate = date || new Date().toISOString().split('T')[0];
+  const fallbackRef = 'AND' + autoDate.replace(/-/g, '');
+  const resolvedRefNo = refNo && refNo.trim() !== '' ? refNo : (cleanPassport ? `AND${cleanPassport}` : fallbackRef);
+
   return (
     <div style={{ background: '#0A192F', color: '#e2e8f0', padding: '0 26px', height: '38px' }} className="flex items-center justify-between font-semibold border-b border-slate-700 box-border w-full">
       <div className="flex items-center gap-2.5 h-full">
         <span className="text-[#0BBF93] font-bold flex items-center text-sm sm:text-base">Ref. No / <span style={{ fontFamily: 'Arial, sans-serif' }} className="cv-font-arabic ml-1.5 font-bold">رقم المرجع</span>:</span>
-        <span className="bg-slate-800 px-3 py-1 rounded border border-slate-600 text-white font-mono text-sm sm:text-base font-semibold flex items-center shadow-2xs">{refNo || 'ANDALUS-2026-0892'}</span>
+        <span className="bg-slate-800 px-3 py-1 rounded border border-slate-600 text-white font-mono text-sm sm:text-base font-semibold flex items-center shadow-2xs">{resolvedRefNo}</span>
       </div>
       <div className="flex items-center gap-2.5 h-full">
         <span className="text-[#0BBF93] font-bold flex items-center text-sm sm:text-base">Date / <span style={{ fontFamily: 'Arial, sans-serif' }} className="cv-font-arabic ml-1.5 font-bold">التاريخ</span>:</span>
-        <span className="bg-slate-800 px-3 py-1 rounded border border-slate-600 text-white font-mono text-sm sm:text-base font-semibold flex items-center shadow-2xs">{date || new Date().toISOString().split('T')[0]}</span>
+        <span className="bg-slate-800 px-3 py-1 rounded border border-slate-600 text-white font-mono text-sm sm:text-base font-semibold flex items-center shadow-2xs">{autoDate}</span>
       </div>
     </div>
   );
@@ -181,7 +186,7 @@ function CVPage1({ formData, officeInfo }: { formData: any; officeInfo: any }) {
   return (
     <div id="cv-page-1" className="cv-page-container page-break-after-always shadow-2xl">
       <AgencyHeader officeInfo={officeInfo} />
-      <ReferenceSubBar refNo={formData.refNo} date={formData.date} />
+      <ReferenceSubBar refNo={formData.refNo} date={formData.date} passportNumber={formData.passportNumber} />
 
       <div style={{ padding: '6px 20px 94px 20px' }} className="space-y-2.5 box-border">
         {/* Candidate Name & Larger Headshot Panel */}
@@ -342,7 +347,7 @@ function CVPage2({ formData, officeInfo }: { formData: any; officeInfo: any }) {
   return (
     <div id="cv-page-2" className="cv-page-container shadow-2xl">
       <AgencyHeader officeInfo={officeInfo} />
-      <ReferenceSubBar refNo={formData.refNo} date={formData.date} />
+      <ReferenceSubBar refNo={formData.refNo} date={formData.date} passportNumber={formData.passportNumber} />
 
       <div style={{ padding: '24px 20px 94px 20px' }} className="space-y-6 box-border">
         <div className="flex flex-col">
