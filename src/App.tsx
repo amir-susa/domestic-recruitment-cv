@@ -1,4 +1,4 @@
-﻿import goldLogoImg from './assets/Tesnim CV Studio Gold Logo.png';
+﻿import goldLogoImg from "./assets/Tesnim CV Studio Gold Logo.png";
 import { useState, useEffect, useRef } from 'react';
 import { CVFormContext, defaultCVFormData, type CVFormData } from './context/CVFormContext';
 import { PreviewModalButton } from './components/PreviewModalButton';
