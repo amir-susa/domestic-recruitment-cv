@@ -482,8 +482,24 @@ export function DareinHtmlTemplate({
           driving: source.skills?.driving ?? false,
         },
         date: source.date,
-        date: source.date || new Date().toISOString().split('T')[0],
-        refNo: source.refNo || (source.passportNumber ? `DAR${source.passportNumber.replace(/[^a-zA-Z0-9]/g, '')}` : `DAR${(source.date || new Date().toISOString().split('T')[0]).replace(/-/g, '')}`),
+        date: (() => {
+          const now = new Date();
+          const day = String(now.getDate()).padStart(2, '0');
+          const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+          const monthStr = monthNames[now.getMonth()];
+          const year = now.getFullYear();
+          const hours = String(now.getHours()).padStart(2, '0');
+          const minutes = String(now.getMinutes()).padStart(2, '0');
+          return `${day} ${monthStr} ${year}, ${hours}:${minutes}`;
+        })(),
+        refNo: (() => {
+          const now = new Date();
+          const day = String(now.getDate()).padStart(2, '0');
+          const monthNum = String(now.getMonth() + 1).padStart(2, '0');
+          const compactDate = `${day}${monthNum}${now.getFullYear()}`;
+          const cleanPass = (source.passportNumber || source.passport?.number || 'EP000000').replace(/[^a-zA-Z0-9]/g, '');
+          return `DAR/${compactDate}/${cleanPass}/01`;
+        })(),
         applicantPhotoUrl: source.headshotPhoto ?? source.applicantPhotoUrl,
         fullPhotoUrl: source.fullBodyPhoto ?? source.fullPhotoUrl,
         passportCopyUrl: source.passportScan ?? source.passportCopyUrl,

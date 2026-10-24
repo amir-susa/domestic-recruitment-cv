@@ -94,6 +94,36 @@ function GeneralFooter() {
   );
 }
 
+function ReferenceSubBar({ refNo, date, passportNumber }: { refNo?: string; date?: string; passportNumber?: string }) {
+  const now = new Date();
+  const day = String(now.getDate()).padStart(2, '0');
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const monthStr = monthNames[now.getMonth()];
+  const year = now.getFullYear();
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const formattedDateTime = `${day} ${monthStr} ${year}, ${hours}:${minutes}`;
+
+  const monthNum = String(now.getMonth() + 1).padStart(2, '0');
+  const compactDate = `${day}${monthNum}${year}`;
+  const cleanPassport = (passportNumber || 'EP000000').replace(/[^a-zA-Z0-9]/g, '');
+
+  const resolvedRefNo = `TEM/${compactDate}/${cleanPassport}/01`;
+
+  return (
+    <div style={{ background: '#0A192F', color: '#e2e8f0', padding: '0 26px', height: '36px' }} className="flex items-center justify-between font-semibold border-b border-slate-700 box-border w-full text-xs">
+      <div className="flex items-center gap-2 h-full">
+        <span className="text-[#0BBF93] font-bold flex items-center">Ref. No:</span>
+        <span className="bg-slate-800 px-2.5 py-0.5 rounded border border-slate-600 text-white font-mono font-semibold">{resolvedRefNo}</span>
+      </div>
+      <div className="flex items-center gap-2 h-full">
+        <span className="text-[#0BBF93] font-bold flex items-center">Date:</span>
+        <span className="bg-slate-800 px-2.5 py-0.5 rounded border border-slate-600 text-white font-mono font-semibold">{formattedDateTime}</span>
+      </div>
+    </div>
+  );
+}
+
 function CVPage1({ formData }: { formData: any }) {
   const experiences = formData.previousExperiences || [];
   const languages = formData.languages || { arabic: "Basic", english: "Basic" };
@@ -102,6 +132,7 @@ function CVPage1({ formData }: { formData: any }) {
   return (
     <div id="general-page-1" className="cv-page-container page-break-after-always shadow-2xl">
       <GeneralHeader />
+      <ReferenceSubBar passportNumber={formData.passportNumber} />
 
       <div style={{ padding: '16px 24px 80px 24px' }} className="space-y-4 box-border">
         {/* Name Bar */}
@@ -247,6 +278,7 @@ function CVPage2({ formData }: { formData: any }) {
   return (
     <div id="general-page-2" className="cv-page-container shadow-2xl relative">
       <GeneralHeader />
+      <ReferenceSubBar passportNumber={formData.passportNumber} />
 
       <div className="p-8 space-y-4">
         <h3 className="text-xl font-bold text-[#08265F] lowercase tracking-wide">
