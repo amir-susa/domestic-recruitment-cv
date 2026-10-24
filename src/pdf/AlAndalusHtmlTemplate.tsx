@@ -119,10 +119,20 @@ function AgencyHeader({ officeInfo }: { officeInfo: { en: string; ar: string } }
 }
 
 function ReferenceSubBar({ refNo, date, passportNumber }: { refNo?: string; date?: string; passportNumber?: string }) {
-  const cleanPassport = (passportNumber || '').replace(/[^a-zA-Z0-9]/g, '');
-  const autoDate = date || new Date().toISOString().split('T')[0];
-  const fallbackRef = 'AND' + autoDate.replace(/-/g, '');
-  const resolvedRefNo = refNo && refNo.trim() !== '' ? refNo : (cleanPassport ? `AND${cleanPassport}` : fallbackRef);
+  const now = new Date();
+  const day = String(now.getDate()).padStart(2, '0');
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const monthStr = monthNames[now.getMonth()];
+  const year = now.getFullYear();
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const formattedDateTime = `${day} ${monthStr} ${year}, ${hours}:${minutes}`;
+
+  const monthNum = String(now.getMonth() + 1).padStart(2, '0');
+  const compactDate = `${day}${monthNum}${year}`;
+  const cleanPassport = (passportNumber || 'EP000000').replace(/[^a-zA-Z0-9]/g, '');
+
+  const resolvedRefNo = `AND/${compactDate}/${cleanPassport}/01`;
 
   return (
     <div style={{ background: '#0A192F', color: '#e2e8f0', padding: '0 26px', height: '38px' }} className="flex items-center justify-between font-semibold border-b border-slate-700 box-border w-full">
@@ -132,7 +142,7 @@ function ReferenceSubBar({ refNo, date, passportNumber }: { refNo?: string; date
       </div>
       <div className="flex items-center gap-2.5 h-full">
         <span className="text-[#0BBF93] font-bold flex items-center text-sm sm:text-base">Date / <span style={{ fontFamily: 'Arial, sans-serif' }} className="cv-font-arabic ml-1.5 font-bold">التاريخ</span>:</span>
-        <span className="bg-slate-800 px-3 py-1 rounded border border-slate-600 text-white font-mono text-sm sm:text-base font-semibold flex items-center shadow-2xs">{autoDate}</span>
+        <span className="bg-slate-800 px-3 py-1 rounded border border-slate-600 text-white font-mono text-xs sm:text-sm font-semibold flex items-center shadow-2xs">{formattedDateTime}</span>
       </div>
     </div>
   );

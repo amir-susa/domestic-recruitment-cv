@@ -290,26 +290,6 @@ export default function App() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-[13px] font-medium text-[#475569]">Reference Number</label>
-                  <input
-                    type="text"
-                    value={formData.refNo || ''}
-                    onChange={(e) => setFormData({ ...formData, refNo: e.target.value })}
-                    className="w-full bg-white border border-[#CBD5E1] rounded-[8px] h-[40px] px-3.5 text-[14px] text-[#1E293B] focus:outline-none focus:ring-2 focus:ring-[#0E8F86]"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-[13px] font-medium text-[#475569]">Date (DD/MM/YYYY)</label>
-                  <input
-                    type="date"
-                    value={formData.date || ''}
-                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full bg-white border border-[#CBD5E1] rounded-[8px] h-[40px] px-3.5 text-[14px] text-[#1E293B] focus:outline-none focus:ring-2 focus:ring-[#0E8F86]"
-                  />
-                </div>
-
-                <div className="space-y-1.5">
                   <label className="text-[13px] font-medium text-[#475569]">Nationality *</label>
                   <select
                     value={formData.nationality || 'Ethiopian'}
