@@ -481,7 +481,6 @@ export function DareinHtmlTemplate({
           sewing: source.skills?.sewing ?? false,
           driving: source.skills?.driving ?? false,
         },
-        date: source.date,
         date: (() => {
           const now = new Date();
           const day = String(now.getDate()).padStart(2, '0');

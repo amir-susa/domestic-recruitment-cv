@@ -1,5 +1,4 @@
-﻿import React from 'react';
-import { CVFormData } from '../../context/CVFormContext';
+﻿import type { CVFormData } from '../../context/CVFormContext';
 
 interface Props {
   formData: CVFormData;

@@ -1,5 +1,4 @@
-﻿import React from "react";
-import goldLogoImg from "../assets/Tesnim CV Studio Gold Logo.png";
+﻿import goldLogoImg from "../assets/Tesnim CV Studio Gold Logo.png";
 
 export function BrandLogo() {
   return (

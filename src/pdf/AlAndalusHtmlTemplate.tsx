@@ -118,7 +118,7 @@ function AgencyHeader({ officeInfo }: { officeInfo: { en: string; ar: string } }
   );
 }
 
-function ReferenceSubBar({ refNo, date, passportNumber }: { refNo?: string; date?: string; passportNumber?: string }) {
+function ReferenceSubBar({ refNo, date, passportNumber }: { refNo?: string; date?: string; passportNumber?: string }) { void refNo; void date;
   const now = new Date();
   const day = String(now.getDate()).padStart(2, '0');
   const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
