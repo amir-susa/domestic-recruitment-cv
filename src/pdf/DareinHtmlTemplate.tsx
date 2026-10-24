@@ -59,16 +59,18 @@ export interface DareinHtmlTemplateProps {
   /** Form state from the same CV form used by AlAndalusHtmlTemplate. */
   formData?: any;
   className?: string;
-  /** Logo image URL. Defaults to DEFAULT_LOGO_SRC (your assets folder). */
   logoSrc?: string;
-  /** Phone icon image URL. Defaults to DEFAULT_PHONE_ICON_SRC (your assets folder). */
   phoneIconSrc?: string;
 }
 
 /* Asset locations — change these two lines to match your project's assets folder.
    (With a bundler you can instead: import logo from "../assets/logo.png" and pass it as logoSrc.) */
-export const DEFAULT_LOGO_SRC = "/assets/logo.png";
-export const DEFAULT_PHONE_ICON_SRC = "/assets/mobile-icon.png";
+
+import defaultLogo from "../assets/logo.png";
+import defaultPhoneIcon from "../assets/mobile-icon.png";
+
+export const DEFAULT_LOGO_SRC = defaultLogo;
+export const DEFAULT_PHONE_ICON_SRC = defaultPhoneIcon;
 
 export const defaultDareinData: DareinCvData = {
   fullName: "",
