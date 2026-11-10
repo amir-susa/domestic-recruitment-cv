@@ -46,3 +46,10 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+
+# Public README screenshots
+!screenshots/Screenshot_10-11-2026_82633_localhost.jpeg
+!screenshots/Screenshot_10-11-2026_82851_.jpeg
+!screenshots/Screenshot_10-11-2026_82914_.jpeg
+
+!screenshots/Screenshot_10-11-2026_85948_localhost.jpeg

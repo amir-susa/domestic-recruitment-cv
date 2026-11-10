@@ -102,3 +102,25 @@ An internal recruitment documentation tool for candidate registration, CV prepar
 ---
 
 **Developed for Tesnim Foreign Employment Agency.**
+
+## Application Screenshots
+
+### 1. Main Application
+The candidate registration interface for entering personal information, passport details, language proficiency, skills, and work experience.
+
+![Tesnim CV Studio Main Application](screenshots/Screenshot_10-11-2026_82633_localhost.jpeg)
+
+### 2. CV Preview
+Preview the completed candidate CV before generating the final document.
+
+![CV Preview](screenshots/Screenshot_10-11-2026_85948_localhost.jpeg)
+
+### 3. Saudi Recruitment CV
+Printable CV layout for Saudi Arabia recruitment operations.
+
+![Saudi Recruitment CV](screenshots/Screenshot_10-11-2026_82851_.jpeg)
+
+### 4. Kuwait Recruitment CV
+Printable Darein Est CV layout for Kuwait recruitment operations.
+
+![Kuwait Recruitment CV](screenshots/Screenshot_10-11-2026_82914_.jpeg)
