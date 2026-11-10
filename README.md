@@ -1,75 +1,104 @@
-# React + TypeScript + Vite
+# Tesnim CV Studio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A bilingual candidate registration and CV generation application developed for **Tesnim Foreign Employment Agency**.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Tesnim CV Studio streamlines candidate registration, document management, CV previews, and printable PDF generation for domestic manpower recruitment operations.
 
-## React Compiler
+## Key Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Candidate registration and personal information management.
+- Automatic age calculation and passport expiry detection.
+- English and Arabic language proficiency.
+- Domestic work skills and previous GCC employment records.
+- Candidate photo, passport, and medical document attachments.
+- Three office templates: Al-Andalus, Darein Est, and General Agency.
+- CV preview and printable PDF generation.
+- Browser-based draft restoration and autosave.
 
-## Expanding the ESLint configuration
+## Technology Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React 19
+- TypeScript 6
+- Vite 8
+- Tailwind CSS 3
+- Framer Motion
+- Lucide React
+- jsPDF
+- html2pdf.js
+- html2canvas
+- @react-pdf/renderer
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Getting Started
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Requirements
+- Node.js
+- npm
+- Git
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Installation
 
+```bash
+git clone https://github.com/amir-susa/domestic-recruitment-cv.git
+cd domestic-recruitment-cv
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+### Development
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm run dev
 ```
+
+### Production Build
+
+```bash
+npm run build
+```
+
+### Preview Production Build
+
+```bash
+npm run preview
+```
+
+### Lint
+
+```bash
+npm run lint
+```
+
+## Project Structure
+
+```text
+src/
+├── assets/
+├── components/
+├── config/
+├── context/
+├── data/
+├── pdf/
+├── App.tsx
+├── main.tsx
+└── index.css
+```
+
+## Privacy and Data Protection
+
+Candidate information may include sensitive personal details, passport information, photographs, and medical documents.
+
+- Do not commit real candidate documents or identifiable applicant photographs.
+- Use authorized and secure devices.
+- Clear saved candidate drafts when using shared devices.
+- Restrict access to generated CVs and supporting documents.
+
+Browser-based data handling does not replace organizational access controls or appropriate data-retention policies.
+
+## Intended Use
+
+An internal recruitment documentation tool for candidate registration, CV preparation, and printable document generation.
+
+---
+
+**Developed for Tesnim Foreign Employment Agency.**
