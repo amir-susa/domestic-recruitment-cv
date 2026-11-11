@@ -1,4 +1,4 @@
-﻿import type { CSSProperties } from "react";
+import type { CSSProperties } from "react";
 
 /* -------------------------------------------------------------------------- */
 /*  DAREIN EST — "Application for Employment" · two-page A4 HTML template      */
@@ -28,6 +28,8 @@ export interface DareinCvData {
   };
   languages: { english: Level; arabic: Level };
   experience: { country: string; period: string };
+  /** All previous experiences (max 3). `experience` mirrors the first one. */
+  experiences?: Array<{ country: string; period: string }>;
   skills: {
     babySitting: boolean;
     washing: boolean;
@@ -100,6 +102,17 @@ export const defaultDareinData: DareinCvData = {
   contactPhone: "69984733",
   date: "",
   refNo: "",
+};
+
+const formatExperiencePeriod = (exp: any): string => {
+  const given = String((exp && exp.period) || "").trim();
+  if (given) return given;
+  const y = parseInt(String((exp && exp.years) || "0"), 10) || 0;
+  const m = parseInt(String((exp && exp.months) || "0"), 10) || 0;
+  const parts: string[] = [];
+  if (y > 0) parts.push(y + " " + (y === 1 ? "Year" : "Years"));
+  if (m > 0) parts.push(m + " " + (m === 1 ? "Month" : "Months"));
+  return parts.join(", ");
 };
 
 const toArabicDigits = (s: string) => s.replace(/\d/g, (d) => "٠١٢٣٤٥٦٧٨٩"[Number(d)]);
@@ -356,6 +369,10 @@ const CSS = `
 .drn-passport-section .drn-sec { width: 100%; }
 .drn-passport-section .drn-passport { width: 100%; }
 .drn-passport-box { width: 131.6mm; height: 90mm; margin: 0 auto; }
+/* previous experience: several countries side by side (same total height) */
+.drn-exp { padding: 0.5mm 1mm; line-height: 1.05; overflow-wrap: anywhere; }
+.drn-exp-2 { font-size: 10.5pt; }
+.drn-exp-3 { font-size: 8.5pt; }
 `;
 
 /* --------------------------------- Pieces --------------------------------- */
@@ -433,9 +450,13 @@ export function DareinHtmlTemplate({
    * prop remains supported for existing callers.
    */
   const source = formData ?? {};
-  const firstExperience = Array.isArray(source.previousExperiences)
-    ? source.previousExperiences[0]
-    : undefined;
+  const experienceList: Array<{ country: string; period: string }> = (
+    Array.isArray(source.previousExperiences) ? source.previousExperiences : []
+  )
+    .map((exp: any) => ({ country: String((exp && exp.country) || "").trim(), period: formatExperiencePeriod(exp) }))
+    .filter((exp: { country: string; period: string }) => exp.country !== "" || exp.period !== "")
+    .slice(0, 3);
+  const firstExperience = experienceList[0];
   const languageLevel = (value: unknown): Level => {
     const level = String(value ?? "").trim().toLowerCase();
     if (level === "poor" || level === "basic") return "poor";
@@ -468,13 +489,9 @@ export function DareinHtmlTemplate({
         },
         experience: {
           country: firstExperience?.country ?? source.experience?.country ?? "",
-          period: firstExperience?.period
-            ?? (firstExperience
-              ? [firstExperience.years, firstExperience.months]
-                  .filter((part) => part !== undefined && part !== null && String(part) !== "" && String(part) !== "0")
-                  .join(" ")
-              : source.experience?.period ?? ""),
+          period: firstExperience?.period ?? source.experience?.period ?? "",
         },
+        experiences: experienceList,
         skills: {
           babySitting: source.skills?.babySitting ?? source.skills?.babysitting ?? defaultDareinData.skills.babySitting,
           washing: source.skills?.washing ?? defaultDareinData.skills.washing,
@@ -520,6 +537,12 @@ export function DareinHtmlTemplate({
     skills: { ...defaultDareinData.skills, ...mappedFormData.skills, ...data?.skills },
   };
 
+  const experienceRows: Array<{ country: string; period: string }> =
+    d.experiences && d.experiences.length > 0
+      ? d.experiences
+      : [{ country: d.experience.country, period: d.experience.period }];
+  const expCount = experienceRows.length;
+  const expCols = "21mm repeat(" + expCount + ", minmax(0, 1fr)) 13mm";
   const detailCols = "34fr 38fr 34fr";
   const passportCols = "33fr 25fr 26fr";
 
@@ -624,17 +647,38 @@ export function DareinHtmlTemplate({
               <div>
                 <SectionHead en="PREVIOUS EXPERIENCE" ar="الخبرة السابقة" />
                 <div className="drn-table">
-                  <div className="drn-row" style={{ gridTemplateColumns: "26fr 66fr 14fr", height: "7mm" }}>
-                    <div className="drn-cell drn-label">COUNTRY</div>
-                    <div className="drn-cell drn-value-left drn-value">{d.experience.country}</div>
-                    <div className="drn-cell drn-label drn-ar" lang="ar">دولة</div>
-                  </div>
-                  <div className="drn-row" style={{ gridTemplateColumns: "26fr 66fr 14fr", height: "7mm" }}>
-                    <div className="drn-cell drn-label">PERIOD</div>
-                    <div className="drn-cell drn-value-left drn-value">{d.experience.period}</div>
-                    <div className="drn-cell drn-label drn-ar" lang="ar">المدة</div>
-                  </div>
-                </div>
+                {expCount <= 1 ? (
+                  <>
+                    <div className="drn-row" style={{ gridTemplateColumns: "26fr 66fr 14fr", height: "7mm" }}>
+                      <div className="drn-cell drn-label">COUNTRY</div>
+                      <div className="drn-cell drn-value-left drn-value">{experienceRows[0].country}</div>
+                      <div className="drn-cell drn-label drn-ar" lang="ar">دولة</div>
+                    </div>
+                    <div className="drn-row" style={{ gridTemplateColumns: "26fr 66fr 14fr", height: "7mm" }}>
+                      <div className="drn-cell drn-label">PERIOD</div>
+                      <div className="drn-cell drn-value-left drn-value">{experienceRows[0].period}</div>
+                      <div className="drn-cell drn-label drn-ar" lang="ar">المدة</div>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="drn-row" style={{ gridTemplateColumns: expCols, minHeight: "7mm" }}>
+                      <div className="drn-cell drn-label">COUNTRY</div>
+                      {experienceRows.map((e, i) => (
+                        <div key={"c" + i} className={"drn-cell drn-value drn-exp drn-exp-" + expCount}>{e.country}</div>
+                      ))}
+                      <div className="drn-cell drn-label drn-ar" lang="ar">دولة</div>
+                    </div>
+                    <div className="drn-row" style={{ gridTemplateColumns: expCols, minHeight: "7mm" }}>
+                      <div className="drn-cell drn-label">PERIOD</div>
+                      {experienceRows.map((e, i) => (
+                        <div key={"p" + i} className={"drn-cell drn-value drn-exp drn-exp-" + expCount}>{e.period}</div>
+                      ))}
+                      <div className="drn-cell drn-label drn-ar" lang="ar">المدة</div>
+                    </div>
+                  </>
+                )}
+              </div>
               </div>
 
             </div>

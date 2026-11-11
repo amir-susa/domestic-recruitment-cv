@@ -1,4 +1,4 @@
-# Tesnim CV Studio
+﻿# Tesnim CV Studio
 
 A bilingual candidate registration and CV generation application developed for **Tesnim Foreign Employment Agency**.
 
@@ -73,15 +73,15 @@ npm run lint
 
 ```text
 src/
-├── assets/
-├── components/
-├── config/
-├── context/
-├── data/
-├── pdf/
-├── App.tsx
-├── main.tsx
-└── index.css
+â”œâ”€â”€ assets/
+â”œâ”€â”€ components/
+â”œâ”€â”€ config/
+â”œâ”€â”€ context/
+â”œâ”€â”€ data/
+â”œâ”€â”€ pdf/
+â”œâ”€â”€ App.tsx
+â”œâ”€â”€ main.tsx
+â””â”€â”€ index.css
 ```
 
 ## Privacy and Data Protection
@@ -124,3 +124,4 @@ Printable CV layout for Saudi Arabia recruitment operations.
 Printable Darein Est CV layout for Kuwait recruitment operations.
 
 ![Kuwait Recruitment CV](screenshots/Screenshot_10-11-2026_82914_.jpeg)
+
