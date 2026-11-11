@@ -1,4 +1,4 @@
-﻿import { FileText, Image as ImageIcon } from 'lucide-react';
+import { FileText, CheckCircle, User, Image as ImageIcon } from 'lucide-react';
 import type { CVFormData } from "../context/CVFormContext";
 
 interface Props {
@@ -70,6 +70,10 @@ export function GeneralHtmlTemplate({ formData }: Props) {
   );
 }
 
+/* ------------------------------------------------------------------ */
+/* Header + reference bar: unchanged from the original General design  */
+/* ------------------------------------------------------------------ */
+
 function GeneralHeader() {
   return (
     <div className="w-full bg-[#08265F] text-white p-6 text-center shadow-md">
@@ -77,19 +81,6 @@ function GeneralHeader() {
       <h2 className="text-2xl font-serif italic text-slate-200 mt-1 border-b-2 border-white/30 pb-2 inline-block px-8">
         Foreign Employment Agency
       </h2>
-    </div>
-  );
-}
-
-function GeneralFooter() {
-  return (
-    <div className="absolute bottom-0 left-0 right-0 bg-[#08265F] text-white py-3 px-6 text-center text-xs font-semibold space-y-1">
-      <div className="flex justify-center gap-6">
-        <span>+251 11 128 0000</span>
-        <span>│</span>
-        <span>+251 90 828 2828</span>
-      </div>
-      <p>tesnimagency2828@gmail.com</p>
     </div>
   );
 }
@@ -124,145 +115,224 @@ function ReferenceSubBar({ refNo, date, passportNumber }: { refNo?: string; date
   );
 }
 
+/* ------------------------------------------------------------------ */
+/* Footer (Al-Andalus style, General colours)                          */
+/* ------------------------------------------------------------------ */
+
+function GeneralFooter() {
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: '88px',
+        background: '#08265F',
+        color: '#FFFFFF',
+        padding: '0 26px',
+        fontSize: '14px'
+      }}
+      className="border-t-2 border-white/30 flex flex-col items-center justify-center gap-1.5 text-center box-border z-20 shadow-inner"
+    >
+      <div className="font-bold tracking-wider text-[#0BBF93] uppercase text-base flex items-center justify-center gap-3.5">
+        <span className="flex items-center font-bold text-white">Tesnim Foreign Employment Agency</span>
+        <span>•</span>
+        <span dir="rtl" style={{ fontFamily: 'Arial, sans-serif' }} className="cv-font-arabic font-bold flex items-center">وكالة تسنيم للاستقدام الخارجي</span>
+      </div>
+      <div className="flex items-center justify-center gap-x-6 text-slate-100 text-sm font-medium">
+        <span>Tel: +251 908 282828 / +251 111 280000</span>
+        <span>│</span>
+        <span>Email: tesnimagency2828@gmail.com</span>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Helpers                                                             */
+/* ------------------------------------------------------------------ */
+
+const capitalize = (value?: string) => {
+  const s = String(value ?? '').trim();
+  return s ? s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() : '';
+};
+
+const formatPeriod = (exp: any) => {
+  if (exp.period) return exp.period;
+  const y = parseInt(exp.years || "0", 10);
+  const m = parseInt(exp.months || "0", 10);
+  const parts = [];
+  if (y > 0) parts.push(`${y} ${y === 1 ? 'Year' : 'Years'}`);
+  if (m > 0) parts.push(`${m} ${m === 1 ? 'Month' : 'Months'}`);
+  return parts.length > 0 ? parts.join(', ') : 'None';
+};
+
+/* ------------------------------------------------------------------ */
+/* Pages                                                               */
+/* ------------------------------------------------------------------ */
+
 function CVPage1({ formData }: { formData: any }) {
   const experiences = formData.previousExperiences || [];
   const languages = formData.languages || { arabic: "Basic", english: "Basic" };
   const skills = formData.skills || { babySitting: true, washing: true, cleaning: true, cooking: true };
 
+  const dobAge = [
+    formData.dateOfBirth || '',
+    formData.age ? `(${formData.age} Yrs)` : '',
+  ].filter(Boolean).join(' ');
+  const heightWeight = [
+    formData.height ? `${formData.height} cm` : '',
+    formData.weight ? `${formData.weight} kg` : '',
+  ].filter(Boolean).join(' / ');
+
   return (
     <div id="general-page-1" className="cv-page-container page-break-after-always shadow-2xl">
       <GeneralHeader />
-      <ReferenceSubBar passportNumber={formData.passportNumber} />
+      <ReferenceSubBar refNo={formData.refNo} date={formData.date} passportNumber={formData.passportNumber} />
 
-      <div style={{ padding: '16px 24px 80px 24px' }} className="space-y-4 box-border">
-        {/* Name Bar */}
-        <div className="border-b-2 border-[#08265F] pb-2">
-          <div className="flex items-baseline gap-3">
-            <span className="text-xl font-bold text-[#08265F]">Name:</span>
-            <span className="text-2xl font-extrabold text-slate-900 uppercase tracking-wide border-b border-slate-400 flex-1">
-              {formData.fullName || 'CANDIDATE FULL NAME'}
-            </span>
+      <div style={{ padding: '8px 20px 94px 20px' }} className="space-y-2.5 box-border">
+        {/* Candidate name + headshot panel */}
+        <div
+          style={{ background: '#F5F8FC', borderColor: '#08265F', padding: '5px 14px', height: '40mm' }}
+          className="border-2 rounded-lg flex items-center justify-between shadow-sm box-border"
+        >
+          <div className="flex-1 flex flex-col justify-center pr-4">
+            <div className="text-center mb-1 text-xs font-bold text-slate-700 flex items-center justify-center gap-1.5">
+              <span className="uppercase tracking-wider">Candidate Name</span>
+              <span className="text-slate-400 font-normal">/</span>
+              <span style={{ fontFamily: 'Arial, sans-serif' }} className="cv-font-arabic">اسم المرشح</span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-extrabold text-[#08265F] uppercase tracking-wide text-center leading-snug">
+              {formData.fullName || 'FULL CANDIDATE NAME'}
+            </h2>
+          </div>
+
+          <div
+            style={{ width: '32mm', height: '36mm', borderColor: '#08265F' }}
+            className="border-2 rounded-md bg-white flex flex-col items-center justify-center overflow-hidden relative shadow-sm shrink-0"
+          >
+            {formData.headshotPhoto ? (
+              <img src={formData.headshotPhoto} alt="Headshot" className="w-full h-full object-cover" />
+            ) : (
+              <div className="text-center p-1 text-slate-400 flex flex-col items-center justify-center">
+                <User className="w-5 h-5 text-slate-400 mb-0.5" />
+                <span className="text-[9.5px] font-semibold uppercase text-slate-600">Headshot</span>
+                <span style={{ fontFamily: 'Arial, sans-serif' }} className="text-[9.5px] cv-font-arabic text-slate-500">الصورة الشخصية</span>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* 2-Column Grid */}
-        <div className="grid grid-cols-12 gap-4">
-          <div className="col-span-6 space-y-3">
-            {/* Details of Application */}
-            <div className="border border-slate-300 rounded-lg overflow-hidden text-xs shadow-sm">
-              <div className="bg-[#08265F] text-white px-3 py-1.5 font-bold rounded-t-md flex justify-between">
-                <span>Details of Application</span>
-                <span className="cv-font-arabic">بيانات الطلب</span>
-              </div>
-              <div className="divide-y divide-slate-200 bg-white">
-                <Row en="Nationality" ar="الجنسية" val={formData.nationality} />
-                <Row en="Religion" ar="الديانة" val={formData.religion} />
-                <Row en="Place of Birth" ar="مكان الميلاد" val={formData.placeOfBirth} />
-                <Row en="Date of Birth" ar="تاريخ الميلاد" val={formData.dateOfBirth} />
-                <Row en="Age" ar="العمر" val={formData.age ? `${formData.age} Yrs` : ''} />
-                <Row en="Living Town" ar="مكان السكن" val={formData.placeOfBirth} />
-                <Row en="Marital Status" ar="الحالة الاجتماعية" val={formData.maritalStatus} />
-                <Row en="No. of Children" ar="عدد الاطفال" val={formData.numberOfChildren} />
-                <Row en="Phone No." ar="رقم جوال" val={formData.phoneNo} />
-                <Row en="Height" ar="الطول" val={formData.height ? `${formData.height} cm` : ''} />
-                <Row en="Weight" ar="الوزن" val={formData.weight ? `${formData.weight} kg` : ''} />
-                <Row en="Educational" ar="المستوي التعليمي" val={formData.educationalQualification} />
+        {/* 2-column balanced grid */}
+        <div className="grid grid-cols-12 gap-3">
+          {/* Left column */}
+          <div className="col-span-7 space-y-2">
+            <div>
+              <SectionTitle titleEn="Details of Application" titleAr="بيانات الطلب" />
+              <div className="border border-slate-300 rounded-b-lg overflow-hidden text-[13px] shadow-sm bg-white">
+                <TableRows data={[
+                  { en: 'Nationality', ar: 'الجنسية', val: formData.nationality },
+                  { en: 'Religion', ar: 'الديانة', val: formData.religion },
+                  { en: 'Place of Birth', ar: 'مكان الميلاد', val: formData.placeOfBirth },
+                  { en: 'Date of Birth / Age', ar: 'تاريخ الميلاد / العمر', val: dobAge },
+                  { en: 'Height / Weight', ar: 'الطول / الوزن', val: heightWeight },
+                  { en: 'Marital Status', ar: 'الحالة الاجتماعية', val: formData.maritalStatus },
+                  { en: 'No. of Children', ar: 'عدد الأطفال', val: formData.numberOfChildren },
+                  { en: 'Phone Number', ar: 'رقم الهاتف', val: formData.phoneNo },
+                  { en: 'Education Level', ar: 'المستوى التعليمي', val: formData.educationalQualification },
+                ]} />
               </div>
             </div>
 
-            {/* Language Skills */}
-            <div className="border border-slate-300 rounded-lg overflow-hidden text-xs shadow-sm">
-              <div className="bg-[#08265F] text-white px-3 py-1.5 font-bold rounded-t-md">
-                Language Skills
-              </div>
-              <table className="w-full text-center text-xs">
+            <div>
+              <SectionTitle titleEn="Language Proficiency" titleAr="إتقان اللغات" />
+              <table className="w-full text-[13px] border border-slate-300 rounded-b-lg overflow-hidden text-center shadow-sm bg-white">
                 <thead>
-                  <tr className="bg-slate-100 font-bold border-b">
-                    <th className="p-1.5">Languages</th>
-                    <th className="p-1.5">Arabic</th>
-                    <th className="p-1.5">English</th>
+                  <tr style={{ background: '#08265F' }} className="text-white">
+                    <th className="py-1 px-3 text-center font-semibold text-[12px] uppercase">Language</th>
+                    <th className="py-1 px-3 font-semibold text-[12px] uppercase text-center">Arabic</th>
+                    <th className="py-1 px-3 font-semibold text-[12px] uppercase text-center">English</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-200 bg-white">
-                  <tr>
-                    <td className="p-1.5 font-medium">Good</td>
-                    <td className="p-1.5">{languages.arabic === 'Fluent' || languages.arabic === 'Good' ? '✓' : ''}</td>
-                    <td className="p-1.5">{languages.english === 'Fluent' || languages.english === 'Good' ? '✓' : ''}</td>
-                  </tr>
-                  <tr>
-                    <td className="p-1.5 font-medium">Fair</td>
-                    <td className="p-1.5">{languages.arabic === 'Fair' || languages.arabic === 'Basic' ? '✓' : ''}</td>
-                    <td className="p-1.5">{languages.english === 'Fair' || languages.english === 'Basic' ? '✓' : ''}</td>
-                  </tr>
-                  <tr>
-                    <td className="p-1.5 font-medium">Poor</td>
-                    <td className="p-1.5">{languages.arabic === 'Poor' ? '✓' : ''}</td>
-                    <td className="p-1.5">{languages.english === 'Poor' ? '✓' : ''}</td>
+                <tbody className="divide-y divide-slate-200">
+                  <tr className="bg-[#F5F8FC]/50 font-medium text-slate-900">
+                    <td className="py-1 px-3 text-center font-semibold text-slate-900 text-[13px]">Level</td>
+                    <td className="py-1 px-3 text-[13px] font-bold text-center">{capitalize(languages.arabic) || 'Basic'}</td>
+                    <td className="py-1 px-3 text-[13px] font-bold text-center">{capitalize(languages.english) || 'Basic'}</td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
-            {/* Additional Skills */}
-            <div className="border border-slate-300 rounded-lg overflow-hidden text-xs shadow-sm">
-              <div className="bg-[#08265F] text-white px-3 py-1.5 font-bold rounded-t-md">
-                Additional Skills
-              </div>
-              <div className="divide-y divide-slate-200 bg-white">
-                <Row en="House Work" ar="خادمة" val={skills.cleaning ? 'Yes' : 'No'} />
-                <Row en="Baby Sitting" ar="غذابة الرضيع" val={skills.babySitting ? 'Yes' : 'No'} />
-                <Row en="Cooking" ar="الطبخ" val={skills.cooking ? 'Yes' : 'No'} />
+            <div>
+              <SectionTitle titleEn="Skills & Capabilities" titleAr="المهارات والقدرات" />
+              <div className="border border-slate-300 rounded-b-lg p-1.5 bg-[#F5F8FC]/50 text-[13px] grid grid-cols-3 gap-1.5 shadow-sm">
+                <SkillBadge nameEn="Baby Sitting" nameAr="رعاية الأطفال" active={skills.babySitting} />
+                <SkillBadge nameEn="Washing" nameAr="الغسيل" active={skills.washing} />
+                <SkillBadge nameEn="Cleaning" nameAr="التنظيف" active={skills.cleaning} />
+                <SkillBadge nameEn="Cooking" nameAr="الطبخ" active={skills.cooking} />
+                <SkillBadge nameEn="Sewing" nameAr="الخياطة" active={skills.sewing} />
+                <SkillBadge nameEn="Driving" nameAr="القيادة" active={skills.driving} />
               </div>
             </div>
 
-            {/* Previous Experience */}
-            <div className="border border-slate-300 rounded-lg overflow-hidden text-xs shadow-sm">
-              <div className="bg-[#08265F] text-white px-3 py-1.5 font-bold rounded-t-md">
-                Previous Experience
-              </div>
-              <div className="grid grid-cols-2 bg-slate-100 font-bold p-1.5 text-center border-b">
-                <span>Country</span>
-                <span>Period</span>
-              </div>
-              <div className="bg-white p-2 text-center">
-                {experiences.length > 0 ? (
-                  experiences.map((exp: any, i: number) => (
-                    <div key={i} className="grid grid-cols-2 py-0.5 border-b last:border-0">
-                      <span>{exp.country}</span>
-                      <span>{exp.period || `${exp.years || 0} Yrs`}</span>
-                    </div>
-                  ))
-                ) : (
-                  <span className="text-slate-400 italic">No experience recorded</span>
-                )}
-              </div>
+            <div>
+              <SectionTitle titleEn="Previous Work Experience" titleAr="الخبرات السابقة" />
+              <table className="w-full text-[13px] border border-slate-300 rounded-b-lg overflow-hidden shadow-sm bg-white">
+                <thead>
+                  <tr style={{ background: '#08265F' }} className="text-white">
+                    <th className="py-1 px-3 text-center font-semibold text-[12px] uppercase">Country / <span style={{ fontFamily: 'Arial, sans-serif' }} className="cv-font-arabic">الدولة</span></th>
+                    <th className="py-1 px-3 text-center font-semibold text-[12px] uppercase">Period / <span style={{ fontFamily: 'Arial, sans-serif' }} className="cv-font-arabic">المدة</span></th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-200">
+                  {experiences && experiences.length > 0 ? (
+                    experiences.map((exp: any, idx: number) => (
+                      <tr key={idx} className="bg-white">
+                        <td className="py-1 px-3 text-center font-semibold text-slate-900 text-[13px]">{exp.country}</td>
+                        <td className="py-1 px-3 text-center text-slate-800 font-semibold text-[13px]">{formatPeriod(exp)}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={2} className="py-1.5 text-center text-slate-400 italic text-[13px]">No previous experience registered</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
 
-          {/* Right Column */}
-          <div className="col-span-6 space-y-3 flex flex-col">
-            <div className="border-2 border-[#08265F] rounded-lg bg-slate-900 h-[120mm] overflow-hidden relative shadow-md">
-              {formData.fullBodyPhoto ? (
-                <img src={formData.fullBodyPhoto} alt="Full Body Photo" className="w-full h-full object-cover" />
-              ) : (
-                <div className="h-full flex flex-col items-center justify-center text-slate-400">
-                  <ImageIcon className="w-12 h-12 mb-2 text-slate-500" />
-                  <span className="text-xs font-bold uppercase">Full Photo Container</span>
-                </div>
-              )}
+          {/* Right column */}
+          <div className="col-span-5 space-y-2.5 flex flex-col">
+            <div>
+              <SectionTitle titleEn="Passport Details" titleAr="بيانات جواز السفر" />
+              <div className="border border-slate-300 rounded-b-lg overflow-hidden text-[13px] shadow-sm bg-white">
+                <TableRows data={[
+                  { en: 'Number', ar: 'رقم الجواز', val: formData.passportNumber },
+                  { en: 'Date of Issue', ar: 'تاريخ الإصدار', val: formData.passportDateOfIssue },
+                  { en: 'Place of Issue', ar: 'مكان الإصدار', val: formData.passportPlaceOfIssue },
+                  { en: 'Date of Expiry', ar: 'تاريخ الانتهاء', val: formData.passportDateOfExpiry },
+                ]} />
+              </div>
             </div>
 
-            {/* Passport Details */}
-            <div className="border border-slate-300 rounded-lg overflow-hidden text-xs shadow-sm">
-              <div className="bg-[#08265F] text-white px-3 py-1.5 font-bold rounded-t-md flex justify-between">
-                <span>Passport Details</span>
-                <span className="cv-font-arabic">بيانات جواز السفر</span>
-              </div>
-              <div className="divide-y divide-slate-200 bg-white">
-                <Row en="Number" ar="رقم جواز السفر" val={formData.passportNumber} />
-                <Row en="Date of Issue" ar="تاريخ الاصدار" val={formData.passportDateOfIssue} />
-                <Row en="Place of Issue" ar="مكان الاصدار" val={formData.passportPlaceOfIssue} />
-                <Row en="Date of Exp." ar="تاريخ الانتهاء" val={formData.passportDateOfExpiry} />
+            <div className="flex-1 flex flex-col justify-start">
+              <SectionTitle titleEn="Full Photo" titleAr="الصورة الكاملة" />
+              <div
+                style={{ width: '100%', height: '122mm', borderColor: '#08265F' }}
+                className="border-2 rounded-b-lg bg-slate-50 flex flex-col items-center justify-center overflow-hidden relative shadow-sm p-1.5"
+              >
+                {formData.fullBodyPhoto ? (
+                  <img src={formData.fullBodyPhoto} alt="Full Photo" className="w-full h-full object-cover rounded" />
+                ) : (
+                  <div className="text-center p-3 text-slate-400 flex flex-col items-center justify-center my-auto">
+                    <ImageIcon className="w-8 h-8 text-slate-300 mb-1" />
+                    <span className="text-xs font-semibold text-slate-600 uppercase">Full Body Photo</span>
+                    <span style={{ fontFamily: 'Arial, sans-serif' }} className="text-xs cv-font-arabic text-slate-500 mt-0.5">الصورة الكاملة للمرشح</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -275,26 +345,43 @@ function CVPage1({ formData }: { formData: any }) {
 }
 
 function CVPage2({ formData }: { formData: any }) {
+  const hasMedical = Boolean(formData.medicalScan);
+
   return (
     <div id="general-page-2" className="cv-page-container shadow-2xl relative">
       <GeneralHeader />
-      <ReferenceSubBar passportNumber={formData.passportNumber} />
+      <ReferenceSubBar refNo={formData.refNo} date={formData.date} passportNumber={formData.passportNumber} />
 
-      <div className="p-8 space-y-4">
-        <h3 className="text-xl font-bold text-[#08265F] lowercase tracking-wide">
-          passport
-        </h3>
-
-        <div className="w-full border-2 border-slate-900 h-[150mm] bg-white flex items-center justify-center overflow-hidden relative p-2 shadow-sm">
-          {formData.passportScan ? (
-            <img src={formData.passportScan} alt="Passport Attachment" className="w-full h-full object-contain" />
-          ) : (
-            <div className="text-center text-slate-400">
-              <FileText className="w-16 h-16 mx-auto mb-2 text-slate-300" />
-              <p className="text-sm font-bold uppercase">Passport Attachment Container</p>
-            </div>
-          )}
+      <div style={{ padding: '20px 20px 94px 20px' }} className="space-y-5 box-border">
+        <div className="flex flex-col">
+          <SectionTitle titleEn="Passport Copy Attachment" titleAr="صورة جواز السفر" />
+          <div
+            style={{ height: hasMedical ? '85mm' : '175mm' }}
+            className="w-full border-2 border-[#08265F] rounded-b-lg bg-slate-50 flex flex-col items-center justify-center p-2 relative overflow-hidden shadow-sm"
+          >
+            {formData.passportScan ? (
+              <img src={formData.passportScan} alt="Passport Copy Scan" className="w-full h-full object-contain" />
+            ) : (
+              <div className="text-center p-6 text-slate-400 flex flex-col items-center justify-center">
+                <FileText className="w-12 h-12 text-slate-300 mb-2" />
+                <span className="text-xs font-semibold text-slate-700 uppercase">Passport Copy Attachment Frame</span>
+                <span style={{ fontFamily: 'Arial, sans-serif' }} className="text-xs cv-font-arabic text-slate-500 mt-0.5">مكان إرفاق صورة جواز السفر</span>
+              </div>
+            )}
+          </div>
         </div>
+
+        {hasMedical && (
+          <div className="flex flex-col">
+            <SectionTitle titleEn="Medical Fitness Report Attachment" titleAr="تقرير الفحص الطبي" />
+            <div
+              style={{ height: '105mm' }}
+              className="w-full border-2 border-[#08265F] rounded-b-lg bg-slate-50 flex flex-col items-center justify-center p-2 relative overflow-hidden shadow-sm"
+            >
+              <img src={formData.medicalScan} alt="Medical Report Scan" className="w-full h-full object-contain" />
+            </div>
+          </div>
+        )}
       </div>
 
       <GeneralFooter />
@@ -302,12 +389,44 @@ function CVPage2({ formData }: { formData: any }) {
   );
 }
 
-function Row({ en, ar, val }: { en: string; ar: string; val?: string }) {
+/* ------------------------------------------------------------------ */
+/* Building blocks                                                     */
+/* ------------------------------------------------------------------ */
+
+function SectionTitle({ titleEn, titleAr }: { titleEn: string; titleAr: string }) {
   return (
-    <div className="grid grid-cols-12 p-1.5 items-center">
-      <span className="col-span-5 font-semibold text-slate-700 text-[11px]">{en}</span>
-      <span className="col-span-4 font-bold text-[#08265F] text-center text-[11.5px]">{val || '-'}</span>
-      <span className="col-span-3 cv-font-arabic text-left font-medium text-slate-600 text-[11px]">{ar}</span>
+    <div
+      style={{ background: '#08265F', height: '28px' }}
+      className="text-white rounded-t-lg flex items-center justify-between font-bold px-3.5 box-border shadow-sm"
+    >
+      <span className="uppercase tracking-wider text-[12px] font-semibold flex items-center h-full">{titleEn}</span>
+      <span style={{ fontFamily: 'Arial, sans-serif' }} className="cv-font-arabic text-[#0BBF93] text-[12px] font-bold flex items-center h-full">{titleAr}</span>
+    </div>
+  );
+}
+
+function TableRows({ data }: { data: Array<{ en: string; ar: string; val?: string }> }) {
+  return (
+    <div className="divide-y divide-slate-200">
+      {data.map((row, idx) => (
+        <div key={idx} style={{ minHeight: '26px' }} className="grid grid-cols-12 items-center px-3.5 bg-white">
+          <span className="font-medium text-slate-700 text-[13px] col-span-4 text-left flex items-center py-0.5">{row.en}</span>
+          <span className="font-bold text-[#08265F] text-[13px] col-span-4 text-center flex items-center justify-center py-0.5">{row.val || '-'}</span>
+          <span style={{ fontFamily: 'Arial, sans-serif' }} className="cv-font-arabic font-semibold text-slate-600 text-[13px] col-span-4 text-left flex items-center justify-start py-0.5">{row.ar}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function SkillBadge({ nameEn, nameAr, active }: { nameEn: string; nameAr: string; active?: boolean }) {
+  return (
+    <div className={`flex items-center justify-center gap-1.5 p-1 rounded-md border text-[12px] text-center shadow-2xs ${active ? 'bg-emerald-50/75 border-[#0BBF93] text-slate-900 font-semibold' : 'bg-white border-slate-200 text-slate-400'}`}>
+      <CheckCircle className={`w-3.5 h-3.5 shrink-0 ${active ? 'text-[#0BBF93]' : 'text-slate-300'}`} />
+      <div className="flex flex-col items-center justify-center">
+        <span className="leading-tight font-semibold text-[12px] text-center">{nameEn}</span>
+        <span style={{ fontFamily: 'Arial, sans-serif' }} className="cv-font-arabic text-[11px] text-slate-600 leading-tight text-center">{nameAr}</span>
+      </div>
     </div>
   );
 }
