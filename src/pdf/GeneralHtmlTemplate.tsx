@@ -9,7 +9,7 @@ export function GeneralHtmlTemplate({ formData }: Props) {
   return (
     <div className="flex flex-col items-center text-slate-900 bg-white font-sans">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cairo:wght@400;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cairo:wght@400;600;700;800;900&family=Amiri:wght@400;700&display=swap');
 
         body, .font-sans {
           font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
@@ -20,6 +20,27 @@ export function GeneralHtmlTemplate({ formData }: Props) {
           direction: rtl !important;
           unicode-bidi: embed !important;
           line-height: 1.35 !important;
+        }
+
+        /* Header Arabic lockup: Adjusted font sizes for perfect visual parity with English text */
+        .cv-hdr-ar-title {
+          font-family: 'Cairo', 'Arial', Tahoma, sans-serif;
+          font-weight: 800;
+          font-size: 48px;
+          line-height: 52px;
+          letter-spacing: 0;
+          direction: rtl;
+          unicode-bidi: embed;
+        }
+
+        .cv-hdr-ar-sub {
+          font-family: 'Amiri', 'Times New Roman', 'Traditional Arabic', serif;
+          font-weight: 400;
+          font-size: 28px;
+          line-height: 34px;
+          letter-spacing: 0;
+          direction: rtl;
+          unicode-bidi: embed;
         }
 
         .cv-page-container {
@@ -71,16 +92,33 @@ export function GeneralHtmlTemplate({ formData }: Props) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Header + reference bar: unchanged from the original General design  */
+/* Header + reference bar: Balanced visual scale & alignments         */
 /* ------------------------------------------------------------------ */
 
 function GeneralHeader() {
   return (
-    <div className="w-full bg-[#08265F] text-white p-6 text-center shadow-md">
-      <h1 className="text-4xl font-black tracking-widest uppercase">TESNIM</h1>
-      <h2 className="text-2xl font-serif italic text-slate-200 mt-1 border-b-2 border-white/30 pb-2 inline-block px-8">
-        Foreign Employment Agency
-      </h2>
+    <div style={{ height: '134px', padding: '0 20px' }} className="w-full bg-[#08265F] text-white shadow-md flex items-center justify-between box-border">
+      {/* English (left) */}
+      <div className="flex flex-col items-start text-left">
+        <h1 className="text-5xl font-black tracking-widest uppercase">TESNIM</h1>
+        <div className="inline-flex flex-col mt-0.5">
+          <h2 className="text-3xl font-serif italic text-slate-200 whitespace-nowrap">
+            Foreign Employment Agency
+          </h2>
+          <div className="border-b-2 border-white/30 pb-0.5 w-full"></div>
+        </div>
+      </div>
+      
+      {/* Arabic (right) - Left-aligned text with optically matched scale */}
+      <div dir="rtl" lang="ar" className="flex flex-col items-start text-right">
+        <h1 className="cv-hdr-ar-title font-extrabold">تسنيم</h1>
+        <div className="inline-flex flex-col mt-0.5">
+          <h2 className="cv-hdr-ar-sub text-slate-200 whitespace-nowrap">
+            وكالة الاستقدام الخارجي
+          </h2>
+          <div className="border-b-2 border-white/30 pb-0.5 w-full"></div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -102,7 +140,7 @@ function ReferenceSubBar({ refNo, date, passportNumber }: { refNo?: string; date
   const resolvedRefNo = `TEM/${compactDate}/${cleanPassport}/01`;
 
   return (
-    <div style={{ background: '#0A192F', color: '#e2e8f0', padding: '0 26px', height: '36px' }} className="flex items-center justify-between font-semibold border-b border-slate-700 box-border w-full text-xs">
+    <div style={{ background: '#0A192F', color: '#e2e8f0', padding: '0 20px', height: '36px' }} className="flex items-center justify-between font-semibold border-b border-slate-700 box-border w-full text-xs">
       <div className="flex items-center gap-2 h-full">
         <span className="text-[#0BBF93] font-bold flex items-center">Ref. No:</span>
         <span className="bg-slate-800 px-2.5 py-0.5 rounded border border-slate-600 text-white font-mono font-semibold">{resolvedRefNo}</span>
@@ -116,7 +154,7 @@ function ReferenceSubBar({ refNo, date, passportNumber }: { refNo?: string; date
 }
 
 /* ------------------------------------------------------------------ */
-/* Footer (Al-Andalus style, General colours)                          */
+/* Footer (Al-Andalus style, General colours)                         */
 /* ------------------------------------------------------------------ */
 
 function GeneralFooter() {
@@ -130,7 +168,7 @@ function GeneralFooter() {
         height: '88px',
         background: '#08265F',
         color: '#FFFFFF',
-        padding: '0 26px',
+        padding: '0 20px',
         fontSize: '14px'
       }}
       className="border-t-2 border-white/30 flex flex-col items-center justify-center gap-1.5 text-center box-border z-20 shadow-inner"
@@ -150,7 +188,7 @@ function GeneralFooter() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Helpers                                                             */
+/* Helpers                                                            */
 /* ------------------------------------------------------------------ */
 
 const capitalize = (value?: string) => {
@@ -169,7 +207,7 @@ const formatPeriod = (exp: any) => {
 };
 
 /* ------------------------------------------------------------------ */
-/* Pages                                                               */
+/* Pages                                                              */
 /* ------------------------------------------------------------------ */
 
 function CVPage1({ formData }: { formData: any }) {
@@ -390,7 +428,7 @@ function CVPage2({ formData }: { formData: any }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Building blocks                                                     */
+/* Building blocks                                                    */
 /* ------------------------------------------------------------------ */
 
 function SectionTitle({ titleEn, titleAr }: { titleEn: string; titleAr: string }) {
